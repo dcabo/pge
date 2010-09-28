@@ -1,10 +1,13 @@
-== Los Presupuestos ==
+Los Presupuestos
+================
 
 Los Presupuestos Generales del Estado del año 2010 se encuentran disponibles en la web del [Ministerio de Economía y Hacienda]. Antes de comenzar a trabajar con los Presupuestos es muy recomendable leer el [Libro Azul], que da una visión general de la estructura de los mismos.
 
-== Ejecutando los scripts ==
+Ejecutando los scripts
+======================
 
-=== Preparación: descargando los Presupuestos ===
+Preparación: descargando los Presupuestos
+-----------------------------------------
 
 Los Presupuestos Generales del año 2010 están disponibles en la web del Ministerio tanto en su versión aprobada (la que nos interesa por ahora) como en la versión del proyecto de ley. Cada una de estas versiones se puede visualizar en línea o se puede descargar. En nuestro caso, estamos interesados en descargar la información para trabajar localmente, mucho más cómoda y rápidamente.
 
@@ -32,3 +35,5 @@ Dentro de las secciones (i.e. Ministerios y similares) se encuentran los 'servic
 Para extraer la lista de organismos de los Presupuestos, ejecutar:
 
 > ./extract_child_sections.rb 
+
+La lista resultante debería coincidir con la Estructura Orgánica que se muestra en el Libro Azul de los Presupuestos a partir de la página 66.
