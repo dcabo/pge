@@ -14,8 +14,8 @@ end
 
 puts 'Id, Nombre'
 Dir["master/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ ENTITY_EXPENSES_ECON_BKDOWN )
-    section_id = $1
+  if ( filename =~ ESTATE_ENTITY_EXPENSES_ECON_BKDOWN )
+    section_id = $2
     doc = Nokogiri::HTML(open(filename))
     puts "#{section_id},#{extract_section_name(doc)}"
   end
