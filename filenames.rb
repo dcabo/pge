@@ -1,3 +1,4 @@
+=begin
 Parte general del nombre
    N_[20]10_E[stado?]_V[Color]_1[Serie]_
 más parte específica, como:
@@ -50,4 +51,9 @@ N_10_E_V_2_    Anexos de inversiones reales y programación plurianual (estructu
 N_10_E_V_3_    Anexos de personal
            1  Estructura orgánica
            2  Por programa
-             
+
+=end
+
+ENTITY_EXPENSES_ECON_BKDOWN =             /N_10_E_V_1_101_2_2_2_1(\d\d)_1_1_1.HTM/;
+
+NON_ESTATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_10_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;

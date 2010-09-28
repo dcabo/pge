@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require 'filenames'
 
 def extract_entity_name(doc)
   # Note: the section name may include accented characters, so '\w' doesn't work
@@ -12,7 +13,7 @@ end
 
 puts 'Id,Sección,Tipo,Organismo'
 Dir["master/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ /N_10_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/ )
+  if ( filename =~ NON_ESTATE_ENTITY_EXPENSES_ECON_BKDOWN )
     entity_type = $1
     section_id = $2
     entity_id = "#{section_id}.#{entity_type}.#{$3}"
