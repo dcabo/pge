@@ -13,7 +13,7 @@ def extract_section_name(doc)
 end
 
 puts 'Id, Nombre'
-Dir["master/doc/HTM/*.HTM"].each {|filename|
+Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
   if ( filename =~ ESTATE_ENTITY_EXPENSES_ECON_BKDOWN )
     section_id = $2
     doc = Nokogiri::HTML(open(filename))

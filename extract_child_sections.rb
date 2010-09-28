@@ -28,7 +28,7 @@ def extract_service_names(doc)
 end
 
 puts 'Id,Sección,Tipo,Organismo'
-Dir["master/doc/HTM/*.HTM"].each {|filename|
+Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
   if ( filename =~ ESTATE_ENTITY_EXPENSES_ECON_BKDOWN )
     entity_type = $1 # We know it's 1 though
     section_id = $2
