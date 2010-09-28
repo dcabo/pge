@@ -40,3 +40,5 @@ Para extraer la lista de organismos de los Presupuestos, ejecutar:
     > ./extract_child_sections.rb 
 
 La lista resultante debería coincidir con la Estructura Orgánica que se muestra en el Libro Azul de los Presupuestos a partir de la página 66.
+
+Si no te apetece hacer todo lo anterior, y sólo quieres ver el resultado final, mira en `/output`.
