@@ -1,7 +1,7 @@
 Los Presupuestos
 ================
 
-Los Presupuestos Generales del Estado del año 2010 se encuentran disponibles en la web del [Ministerio de Economía y Hacienda]. Antes de comenzar a trabajar con los Presupuestos es muy recomendable leer el [Libro Azul], que da una visión general de la estructura de los mismos.
+Los Presupuestos Generales del Estado del año 2010 se encuentran disponibles en la web del [Ministerio de Economía y Hacienda][1]. Antes de comenzar a trabajar con los Presupuestos es muy recomendable leer el [Libro Azul][2], que da una visión general de la estructura de los mismos.
 
 Ejecutando los scripts
 ======================
@@ -18,22 +18,25 @@ Una vez descargados, copiar la carpeta `PGE-ROM`, que contiene todos los fichero
 [1]: http://www.sgpg.pap.meh.es/SITIOS/SGPG/ES-ES/PRESUPUESTOS/Paginas/PGE2010.aspx
 [2]: http://www.sgpg.pap.meh.es/sitios/sgpg/es-ES/Presupuestos/Presupuestos/Documents/PROYECTO/LIBRO%20AZULv3.pdf
 
-=== Entendiendo la estructura de ficheros ===
+Entendiendo la estructura de ficheros
+-------------------------------------
 
 La versión de los Presupuestos que nos hemos descargado consiste en un enorme conjunto de ficheros .HTM con nombres aparentemente crípticos. Una pequeña explicación del significado de los nombres de los ficheros se encuentra en `filenames.rb` (hasta donde yo sé).
 
-=== Extracción de organismos de primer nivel ===
+Extracción de organismos de primer nivel
+----------------------------------------
 
 'Sección' es el término en los Presupuestos para las entidades de más alto nivel en el organigrama de la Administración: básicamente Ministerios, pero también organismos del Estado como las Cortes Generales o el Tribunal Constitucional.
 
-> ./extract_top_level_sections.rb
+    > ./extract_top_level_sections.rb
 
-=== Extracción de organismos de segundo nivel ===
+Extracción de organismos de segundo nivel
+-----------------------------------------
 
 Dentro de las secciones (i.e. Ministerios y similares) se encuentran los 'servicios', que se corresponden generalmente con Secretarías Generales y entidades similares. Además, para cada sección existe una serie de 'Organismos Autónomos', 'Organismos Públicos' y 'Agencias Estatales'.
 
 Para extraer la lista de organismos de los Presupuestos, ejecutar:
 
-> ./extract_child_sections.rb 
+    > ./extract_child_sections.rb 
 
 La lista resultante debería coincidir con la Estructura Orgánica que se muestra en el Libro Azul de los Presupuestos a partir de la página 66.
