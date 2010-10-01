@@ -19,9 +19,9 @@ class EconomicBreakdown
   def rows
     rows = []
     # Iterate through HTML table, skipping header
-    @doc.css('table.S0ESTILO8 tr').shift.each do |row|
+    @doc.css('table.S0ESTILO8 tr')[1..-1].each do |row|
       columns = row.css('td').map{|td| td.text.strip}
-      row << {  :service => columns[0], 
+      rows << { :service => columns[0], 
                 :programme => columns[1], 
                 :expense_concept => columns[2], 
                 :description => columns[3],
