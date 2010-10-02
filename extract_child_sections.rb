@@ -10,7 +10,7 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
     section_id = $2
     
     EconomicBreakdown.new(filename).rows.each {|row|
-      if ( row[:service] != '' )
+      unless ( row[:service].empty? )
         entity_id = "#{section_id}.#{entity_type}.#{row[:service]}"
         puts "#{entity_id},#{section_id},#{entity_type},#{row[:description]}"
       end

@@ -16,6 +16,7 @@ class EconomicBreakdown
     $1
   end
   
+  # FIXME: This won't work for non-state entities, the 'service' column is missing
   def rows
     rows = []
     # Iterate through HTML table, skipping header
