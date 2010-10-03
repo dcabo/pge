@@ -2,5 +2,5 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'sinatra'
-require 'app'
+require 'app/app'
 run StateBudgetApp
