@@ -1,11 +1,5 @@
 %html
 	%body
-		Expenses by section
-		
-		%table
-			-@sections.each do |s|
-				%tr
-					%td
-						%a{:href=>"/section/#{s.section}"} #{s.description}
-					%td #{s.amount.to_digits}
+		%a{:href => '/by_section'} Expenses by section
+		%a{:href => '/by_programme'} Expenses by programme
 					
