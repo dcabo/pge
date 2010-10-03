@@ -1,8 +1,13 @@
 %html
 	%body
-		%h2 #{@programme.description}
+		-if not @entity.nil? and not @section.nil?
+			%h2 #{@section.description}
+			%h3 #{@entity.description}
+			%h4 #{@programme.description}
+		-else
+			%h2 #{@programme.description}
 		
-
+		%h4 Total: #{@programme.amount.to_digits}
 		
 		%table
 			-@expenses.each do |e|
