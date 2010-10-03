@@ -3,9 +3,20 @@ require 'nokogiri'
 require 'open-uri'
 
 class EconomicBreakdown
+  attr_reader :section, :entity, :entity_type
+  
   def initialize(filename)
+    if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
+      @is_state_entity = true
+      @entity_type = $1
+      @section = $2
+    elsif ( filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )
+      @is_state_entity = false
+      @entity_type = $1
+      @section = $2
+      @entity = $3
+    end
     @doc = Nokogiri::HTML(open(filename))
-    @is_state_entity = (filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN)
   end
   
   def name
@@ -16,18 +27,22 @@ class EconomicBreakdown
     $1
   end
   
+  def children
+    @is_state_entity ?
+      rows.map {|row| {:id=>row[:service], :name=>row[:description]} if not row[:service].empty? }.compact :
+      [{:id => @entity, :name => name}]
+  end
+  
   # FIXME: This won't work for non-state entities, the 'service' column is missing
   def rows
-    rows = []
     # Iterate through HTML table, skipping header
-    @doc.css('table.S0ESTILO8 tr')[1..-1].each do |row|
+    @doc.css('table.S0ESTILO8 tr')[1..-1].map do |row|
       columns = row.css('td').map{|td| td.text.strip}
-      rows << { :service => columns[0], 
-                :programme => columns[1], 
-                :expense_concept => columns[2], 
-                :description => columns[3],
-                :amount => (columns[4] != '') ? columns[4] : columns[5] }
+      { :service => columns[0], 
+        :programme => columns[1], 
+        :expense_concept => columns[2], 
+        :description => columns[3],
+        :amount => (columns[4] != '') ? columns[4] : columns[5] }
     end
-    rows
   end
 end
