@@ -3,7 +3,7 @@ require 'nokogiri'
 require 'open-uri'
 
 class EconomicBreakdown
-  attr_reader :section, :entity, :entity_type
+  attr_reader :section, :entity, :entity_type, :is_state_entity
   
   def initialize(filename)
     if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )

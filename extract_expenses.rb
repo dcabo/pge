@@ -13,9 +13,9 @@ def convert_number(amount)
   amount.delete('.').tr(',','.')
 end
 
-puts 'section, service, programme, concept, description, amount'
+puts 'section, entity type, service, programme, concept, description, amount'
 Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
+  if ( filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )  # FIXME
     bkdown = EconomicBreakdown.new(filename)
     
     # The total amounts for service/programme/chapter headings is shown when the heading is closed,
@@ -25,7 +25,9 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
     # an empty vector
     open_headings = ["#{bkdown.section}|#{bkdown.entity_type}|||#{bkdown.name}"]
     
-    service = ''
+    # State section breakdowns contain many services, while non-state ones apply to only one
+    # child entity
+    service = bkdown.is_state_entity ? '' : bkdown.entity
     programme = ''
     bkdown.rows.each {|row|
       next if row[:description].empty?  # Skip empty lines
