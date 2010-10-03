@@ -13,9 +13,14 @@ def convert_number(amount)
   amount.delete('.').tr(',','.')
 end
 
-puts 'section, entity type, service, programme, concept, description, amount'
+# TODO: Wouldn't mind getting auto-increment UIDs if I could get the import job to do it
+def get_uid(section, entity_type, service, programme, expense_concept)
+  "#{section}#{entity_type}#{service}#{programme}#{expense_concept}"
+end
+
+# Output 'id, section, entity type, service, programme, concept, description, amount'
 Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )  # FIXME
+  if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )  # FIXME for non-state ones
     bkdown = EconomicBreakdown.new(filename)
     
     # The total amounts for service/programme/chapter headings is shown when the heading is closed,
@@ -23,7 +28,8 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
     # Note: there is an unmatched closing amount, without an opening heading, at the end
     # of the page, containing the amount for the whole section/entity, so we don't start with
     # an empty vector
-    open_headings = ["#{bkdown.section}|#{bkdown.entity_type}|||#{bkdown.name}"]
+    uid = get_uid(bkdown.section, bkdown.entity_type, '', '', '')
+    open_headings = ["#{uid}|#{bkdown.section}|#{bkdown.entity_type}||||#{bkdown.name}"]
     
     # State section breakdowns contain many services, while non-state ones apply to only one
     # child entity
@@ -41,7 +47,8 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
       end
       
       # Print expense
-      expense_description = "#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
+      uid = get_uid(bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
+      expense_description = "#{uid}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
       if ( row[:amount].empty? )              # opening heading
         open_headings << expense_description
       elsif ( row[:expense_concept].empty? )  # closing heading
