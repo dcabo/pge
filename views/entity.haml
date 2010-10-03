@@ -1,13 +1,12 @@
 %html
 	%body
-		%h2= "#{@section.description}"
-		%h3= "#{@entity.description}"
+		%h2 #{@section.description}
+		%h3 #{@entity.description}
 		Expenses by programme
 		
 		%table
 			-@programmes.each do |e|
 				%tr
 					%td
-						%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}/programme/#{e.programme}"}= "#{e.description}"
-					%td
-						="#{e.amount.to_digits}"
+						%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}/programme/#{e.programme}"} #{e.programme} #{e.description}
+					%td #{e.amount.to_digits}

@@ -6,7 +6,6 @@
 			-@sections.each do |s|
 				%tr
 					%td
-						%a{:href=>"/section/#{s.section}"}= "#{s.description}"
-					%td
-						="#{s.amount.to_digits}"
+						%a{:href=>"/section/#{s.section}"} #{s.description}
+					%td #{s.amount.to_digits}
 					
