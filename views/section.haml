@@ -1,0 +1,12 @@
+%html
+	%body
+		%h2= "#{@section.description}"
+		Expenses by entity
+		
+		%table
+			-@entities.each do |e|
+				%tr
+					%td
+						%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}"}= "#{e.description}"
+					%td
+						="#{e.amount.to_digits}"

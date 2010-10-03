@@ -8,9 +8,9 @@ class Expense
   include DataMapper::Resource  
   
   property :id,           String, :key => true
-  property :section,      Integer
-  property :entity_type,  Integer
-  property :entity_id,    Integer
+  property :section,      String
+  property :entity_type,  String
+  property :entity_id,    String
   property :programme,    String
   property :concept,      String
   property :description,  String
