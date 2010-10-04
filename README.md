@@ -6,8 +6,8 @@ Arrancando la aplicación
   
  1. Usa [Bundler][1] para instalar todas las dependencias necesarias (salvo que me haya dejado algo, claro :). Desde el directorio raíz de la aplicación:
  
-    > $ gem install bundler   # si no lo tienes instalado
-    > $ bundle install
+    > $ gem install bundler   # si no lo tienes instalado    
+    > $ bundle install    
     
  1. Arranca la aplicación:
  
