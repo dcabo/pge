@@ -16,8 +16,8 @@ Rellenando la Base de Datos
     
  1. Importar los datos a partir del fichero CSV generado anteriormente:
  
-    sqlite3> .mode csv
-    sqlite3> .separator "|"
-    sqlite3> .import parser/output/expenses.csv expenses
-    sqlite3> .exit
+    > sqlite3> .mode csv
+    > sqlite3> .separator "|"
+    > sqlite3> .import parser/output/expenses.csv expenses
+    > sqlite3> .exit
     
