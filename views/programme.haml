@@ -1,17 +1,15 @@
-%html
-	%body
-		-if not @entity.nil? and not @section.nil?
-			%h2 #{@section.description}
-			%h3 #{@entity.description}
-			%h4 #{@programme.description}
-			%h4 Total: #{@programme.amount.to_digits}
-		-else
-			%h2 #{@programmes.first.description}
-			%h4 Total: #{@total_amount.to_digits}
-		
-		%table
-			-@expenses.each do |e|
-				%tr
-					%td #{e.concept}
-					%td #{e.description}
-					%td #{e.amount.to_digits}
+-if not @entity.nil? and not @section.nil?
+	%h2 #{@section.description}
+	%h3 #{@entity.description}
+	%h4 #{@programme.description}
+	%h4 Total: #{@programme.amount.to_digits}
+-else
+	%h2 #{@programmes.first.description}
+	%h4 Total: #{@total_amount.to_digits}
+
+%table
+	-@expenses.each do |e|
+		%tr
+			%td #{e.concept}
+			%td #{e.description}
+			%td #{e.amount.to_digits}

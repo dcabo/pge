@@ -1,11 +1,8 @@
-%html
-	%body
-		Expenses by programme
-		
-		%table
-			-@programmes.each do |p|
-				%tr
-					%td
-						%a{:href=>"/programme/#{p.programme}"} #{p.programme} #{p.description}
-					%td #{p.amount.to_digits}
-					
+%h1 Expenses by programme
+
+%table
+	-@programmes.each do |p|
+		%tr
+			%td
+				%a{:href=>"/programme/#{p.programme}"} #{p.programme} #{p.description}
+			%td #{p.amount.to_digits}

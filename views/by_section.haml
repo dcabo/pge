@@ -1,11 +1,9 @@
-%html
-	%body
-		Expenses by section
-		
-		%table
-			-@sections.each do |s|
-				%tr
-					%td
-						%a{:href=>"/section/#{s.section}"} #{s.description}
-					%td #{s.amount.to_digits}
-					
+%h1 Expenses by section
+
+%table
+	-@sections.each do |s|
+		%tr
+			%td
+				%a{:href=>"/section/#{s.section}"} #{s.description}
+			%td #{s.amount.to_digits}
+			
