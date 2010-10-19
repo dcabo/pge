@@ -12,37 +12,38 @@ class StateBudgetApp < Sinatra::Base
   end
 
   get '/by_section' do
-    @sections = Expense.all(:entity_id => '')
+    @sections = Expense.section_headings
     haml :by_section
   end
   
   get '/section/:section' do
-    @section = Expense.all(:section => params[:section], :entity_id => '').first
-    @entities = Expense.all(:section => params[:section], :entity_id.not => '', :programme => '')
+    @section = Expense.section(params[:section]).section_headings.first
+    @entities = Expense.section(params[:section]).entity_headings
     haml :section
   end
   
   # TODO: Move all this logic to model
   get '/section/:section/entity/:entity' do
-    @section = Expense.all(:section => params[:section], :entity_id => '').first
-    @entity = Expense.all(:section => params[:section], :entity_id => params[:entity], :programme => '').first
-    @programmes = Expense.all(:section => params[:section], :entity_id => params[:entity], :programme.not => '', :concept => '')
+    @section = Expense.section(params[:section]).section_headings.first
+    @entity = Expense.entity(params[:section], params[:entity]).entity_headings.first
+    @programmes = Expense.entity(params[:section], params[:entity]).programme_headings
     haml :entity
   end
   
   get '/section/:section/entity/:entity/programme/:programme' do
-    @section = Expense.all(:section => params[:section], :entity_id => '').first
-    @entity = Expense.all(:section => params[:section], :entity_id => params[:entity], :programme => '').first
-    @programme = Expense.all(:section => params[:section], :entity_id => params[:entity], :programme => params[:programme], :concept => '').first
-    @expenses = Expense.all(:section => params[:section], :entity_id => params[:entity], :programme => params[:programme], :concept.not => '')
+    @section = Expense.section(params[:section]).section_headings.first
+    @entity = Expense.entity(params[:section], params[:entity]).entity_headings.first
+    @programme = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).programme_headings.first
+    @expenses = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).expenses
     haml :programme
   end
   
   get '/by_programme' do
     # Since a program can be split across many entities, we need to consolidate the list and add up the amounts.
     # Surprisingly, there doesn't seem to be a way to do this in DataMapper
+    # TODO: Could be done through direct SQL, is it worth it?
     @programmes = {}
-    Expense.all(:programme.not => '', :concept => '').each do |p|
+    Expense.programme_headings.each do |p|
       if (previous=@programmes[p.programme]).nil? 
         @programmes[p.programme] = p 
       else
@@ -54,13 +55,13 @@ class StateBudgetApp < Sinatra::Base
   end
   
   get '/programme/:programme' do
-    @programmes = Expense.all(:programme => params[:programme], :concept => '')
+    @programmes = Expense.programme_headings.programme(params[:programme])
     @total_amount = @programmes.inject(0) {|sum,p| sum+p.amount}
     
     # Since a program can be split across many entities, we need to consolidate the expense list and add up the amounts
     # TODO: Do we want to show also the expenses split per entity?
     @expenses = {}
-    Expense.all(:programme => params[:programme], :concept.not => '').each do |e|
+    Expense.programme(params[:programme]).expenses.each do |e|
       # Note that for the same 'economic concept code' we may have more than one description *sigh* so,
       # in order not to lose information, we group by concept _and_ description
       key = e.concept+e.description
