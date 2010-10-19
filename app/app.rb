@@ -12,12 +12,12 @@ class StateBudgetApp < Sinatra::Base
   end
 
   get '/by_section' do
-    @sections = Expense.all(:entity_id => '', :entity_type => '1')  # TODO: Remove constant!
+    @sections = Expense.all(:entity_id => '')
     haml :by_section
   end
   
   get '/section/:section' do
-    @section = Expense.all(:section => params[:section], :entity_id => '', :entity_type => '1').first
+    @section = Expense.all(:section => params[:section], :entity_id => '').first
     @entities = Expense.all(:section => params[:section], :entity_id.not => '', :programme => '')
     haml :section
   end
