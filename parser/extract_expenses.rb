@@ -14,11 +14,14 @@ def convert_number(amount)
 end
 
 # TODO: Wouldn't mind getting auto-increment UIDs if I could get the import job to do it
-def get_uid(section, entity_type, service, programme, expense_concept)
-  "#{section}#{entity_type}#{service}#{programme}#{expense_concept}"
+def get_uid(year, section, entity_type, service, programme, expense_concept)
+  "#{year}#{section}#{entity_type}#{service}#{programme}#{expense_concept}"
 end
 
-# Output 'id, section, entity type, service, programme, concept, description, amount'
+# FIXME: For now we hardcode the year, we need to improve this
+year = '2010'
+
+# Output 'id, year, section, entity type, service, programme, concept, description, amount'
 Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
   if (  filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN or
         filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )
@@ -34,8 +37,8 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
     # Note: there is an unmatched closing amount, without an opening heading, at the end
     # of the page, containing the amount for the whole section/entity, so we don't start with
     # an empty vector
-    uid = get_uid(bkdown.section, bkdown.entity_type, service, programme, '')
-    open_headings = ["#{uid}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}||#{bkdown.name}"]
+    uid = get_uid(year, bkdown.section, bkdown.entity_type, service, programme, '')
+    open_headings = ["#{uid}|#{year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}||#{bkdown.name}"]
     
     bkdown.rows.each {|row|
       next if row[:description].empty?  # Skip empty lines
@@ -49,8 +52,8 @@ Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
       end
       
       # Print expense
-      uid = get_uid(bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
-      expense_description = "#{uid}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
+      uid = get_uid(year, bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
+      expense_description = "#{uid}|#{year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
       
       if ( row[:amount].empty? )              # opening heading
         open_headings << expense_description

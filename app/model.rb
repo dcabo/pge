@@ -8,6 +8,7 @@ class Expense
   include DataMapper::Resource  
   
   property :id,           String, :length => 20, :key => true
+  property :year,         String, :length => 5
   property :section,      String, :length => 2
   property :entity_type,  String, :length => 1
   property :entity_id,    String, :length => 3
