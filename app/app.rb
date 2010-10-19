@@ -8,7 +8,6 @@ require 'app/model'
 
 class StateBudgetApp < Sinatra::Base
   get '/' do
-    @sections = Expense.all(:entity_id => '')
     haml :index
   end
 
