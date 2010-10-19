@@ -55,7 +55,8 @@ class StateBudgetApp < Sinatra::Base
   end
   
   get '/programme/:programme' do
-    @programme = Expense.all(:programme => params[:programme], :concept => '').first
+    @programmes = Expense.all(:programme => params[:programme], :concept => '')
+    @total_amount = @programmes.inject(0) {|sum,p| sum+p.amount}
     
     # Since a program can be split across many entities, we need to consolidate the expense list and add up the amounts
     # TODO: Do we want to show also the expenses split per entity?

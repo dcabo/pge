@@ -4,10 +4,10 @@
 			%h2 #{@section.description}
 			%h3 #{@entity.description}
 			%h4 #{@programme.description}
+			%h4 Total: #{@programme.amount.to_digits}
 		-else
-			%h2 #{@programme.description}
-		
-		%h4 Total: #{@programme.amount.to_digits}
+			%h2 #{@programmes.first.description}
+			%h4 Total: #{@total_amount.to_digits}
 		
 		%table
 			-@expenses.each do |e|
