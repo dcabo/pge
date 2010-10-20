@@ -1,0 +1,23 @@
+%html
+	%head
+		%title PGE
+		%link{"rel" => "stylesheet", "href" => "css/demo_page.css", "type" => "text/css"}
+		%link{"rel" => "stylesheet", "href" => "css/demo_table.css", "type" => "text/css"}
+
+		%script{ :type => "text/javascript", :src => "js/jquery.js" }
+		%script{ :type => "text/javascript", :src => "js/jquery.dataTables.js" }
+
+		:javascript
+			$(document).ready(function() {
+				$('#pge').dataTable({
+					'bInfo': false,
+					'bPaginate': false,
+					'bAutoWidth': false,
+					'bFilter': false,
+					'bSort': false
+				});
+			} );
+
+	%body#dt_example
+		#container
+			= yield

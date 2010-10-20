@@ -1,9 +1,13 @@
 %h1 Expenses by section
 
-%table
-	-@sections.each do |s|
+%table#pge.display
+	%thead
 		%tr
-			%td
-				%a{:href=>"/section/#{s.section}"} #{s.description}
-			%td #{s.amount.to_digits}
-			
+			%th Section
+			%th Amount ('000)
+	%tbody
+		-@sections.each do |s|
+			%tr
+				%td
+					%a{:href=>"/section/#{s.section}"} #{s.description}
+				%td.right #{s.amount.to_i} €
