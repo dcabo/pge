@@ -6,10 +6,10 @@
 	%thead
 		%tr
 			%th Entidad
-			%th Gasto ('000)
+			%th Gasto ('000 €)
 	%tbody
 		-@programmes.each do |e|
 			%tr
 				%td
 					%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}/programme/#{e.programme}"} #{e.programme} #{e.description}
-				%td.right #{e.amount.to_i} €
+				%td.right #{e.amount.to_i}

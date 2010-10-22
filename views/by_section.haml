@@ -4,10 +4,10 @@
 	%thead
 		%tr
 			%th Sección
-			%th Gasto ('000)
+			%th Gasto ('000 €)
 	%tbody
 		-@sections.each do |s|
 			%tr
 				%td
 					%a{:href=>"/section/#{s.section}"} #{s.description}
-				%td.right #{s.amount.to_i} €
+				%td.right #{s.amount.to_i}

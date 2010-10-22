@@ -4,10 +4,10 @@
 	%h2 #{@section.description}
 	%h3 #{@entity.description}
 	%h4 #{@programme.description}
-	%h4 Total: #{@programme.amount.to_digits} € ('000)
+	%h4 Total: #{@programme.amount.to_digits} € ('000 €)
 -else
 	%h2 #{@programmes.first.description}
-	%h4 Total: #{@total_amount.to_digits} € ('000)
+	%h4 Total: #{@total_amount.to_digits} € ('000 €)
 
 %table#pge.display
 	%thead
@@ -20,4 +20,4 @@
 			%tr
 				%td #{e.concept}
 				%td #{e.description}
-				%td.right #{e.amount.to_i} €
+				%td.right #{e.amount.to_i}
