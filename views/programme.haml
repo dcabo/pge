@@ -18,6 +18,7 @@
 	%tbody
 		-@expenses.each do |e|
 			%tr
-				%td #{e.concept}
+				-# The extra space '&nbsp' is a quick hack so the table is sorted as text, not number
+				%td #{e.concept}&nbsp;
 				%td #{e.description}
 				%td.right #{e.amount.to_i}
