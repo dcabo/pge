@@ -1,15 +1,23 @@
+%h1 Desglose por conceptos
+
 -if not @entity.nil? and not @section.nil?
 	%h2 #{@section.description}
 	%h3 #{@entity.description}
 	%h4 #{@programme.description}
-	%h4 Total: #{@programme.amount.to_digits}
+	%h4 Total: #{@programme.amount.to_digits} € ('000)
 -else
 	%h2 #{@programmes.first.description}
-	%h4 Total: #{@total_amount.to_digits}
+	%h4 Total: #{@total_amount.to_digits} € ('000)
 
-%table
-	-@expenses.each do |e|
+%table#pge.display
+	%thead
 		%tr
-			%td #{e.concept}
-			%td #{e.description}
-			%td #{e.amount.to_digits}
+			%th Código
+			%th Descripción
+			%th Gasto ('000)
+	%tbody
+		-@expenses.each do |e|
+			%tr
+				%td #{e.concept}
+				%td #{e.description}
+				%td.right #{e.amount.to_i} €

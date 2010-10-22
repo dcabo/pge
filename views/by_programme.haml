@@ -1,8 +1,13 @@
-%h1 Expenses by programme
+%h1 Gastos por programa
 
-%table
-	-@programmes.each do |p|
+%table#pge.display
+	%thead
 		%tr
-			%td
-				%a{:href=>"/programme/#{p.programme}"} #{p.programme} #{p.description}
-			%td #{p.amount.to_digits}
+			%th Programa
+			%th Gasto ('000)
+	%tbody
+		-@programmes.each do |p|
+			%tr
+				%td
+					%a{:href=>"/programme/#{p.programme}"} #{p.programme} #{p.description}
+				%td.right #{p.amount.to_i} €

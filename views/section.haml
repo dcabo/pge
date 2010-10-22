@@ -1,9 +1,14 @@
+%h1 Gastos por entidad
 %h2 #{@section.description}
-Expenses by entity
 
-%table
-	-@entities.each do |e|
+%table#pge.display
+	%thead
 		%tr
-			%td
-				%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}"} #{e.description}
-			%td #{e.amount.to_digits}
+			%th Entidad
+			%th Gasto ('000)
+	%tbody
+		-@entities.each do |e|
+			%tr
+				%td
+					%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}"} #{e.description}
+				%td.right #{e.amount.to_i} €

@@ -27,7 +27,6 @@ class StateBudgetApp < Sinatra::Base
     haml :section
   end
   
-  # TODO: Move all this logic to model
   get '/section/:section/entity/:entity' do
     @section = Expense.section(params[:section]).section_headings.first
     @entity = Expense.entity(params[:section], params[:entity]).entity_headings.first
