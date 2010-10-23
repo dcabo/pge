@@ -4,10 +4,14 @@
 	%thead
 		%tr
 			%th Sección
-			%th Gasto ('000 €)
+			-@years.each do |year|
+				%th #{year}
 	%tbody
-		-@sections.each do |s|
+		-@sections.each do |heading, s|
 			%tr
 				%td
-					%a{:href=>"/section/#{s.section}"} #{s.description}
-				%td.right #{s.amount.to_i}
+					%a{:href=>"/section/#{s[:section_id]}"} #{heading}
+				-@years.each do |year|
+					%td.right #{s[:expenses][year]}
+
+Todas las cantidades en miles de euros.

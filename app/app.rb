@@ -17,7 +17,19 @@ class StateBudgetApp < Sinatra::Base
   end
 
   get '/by_section' do
-    @sections = Expense.section_headings
+    all_sections = Expense.section_headings
+    @years = all_sections.map{|s| s.year}.uniq
+    @sections = {}
+    
+    all_sections.each {|section|
+      if (summary = @sections[section.description]).nil?
+        summary = {:expenses => {}}
+        summary[:section_id] = section.section  # FIXME: what about different section id!?!
+      end
+      summary[:expenses][section.year] = section.amount.to_i
+      @sections[section.description] = summary
+    }
+    
     haml :by_section
   end
   
