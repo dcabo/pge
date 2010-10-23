@@ -49,6 +49,26 @@ class Expense
   # ...and the rest are expenses
   def self.expenses
     all(:concept.not => '')
+  end 
+end
+
+
+# We add a convenience method to the DataMapper Collection class in order to 
+# consolidate the results as we want them. It takes a block method to use as the 
+# key to group by
+class DataMapper::Collection  
+  def consolidate_by_year_on
+    aggregates = {}
+    self.each {|i|
+      key = yield(i)
+      if (aggregate = aggregates[key]).nil?
+        aggregate = {:expenses => {}}
+        aggregate[:section_id] = i.section  # FIXME: what about different section id!?!
+      end
+      aggregate[:expenses][i.year] = i.amount.to_i
+      aggregates[key] = aggregate
+    }
+    aggregates
   end
 end
 
