@@ -4,11 +4,7 @@ require 'filenames'
 require 'economic_breakdown'
 
 puts 'Id, Nombre'
-Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
-    bkdown = EconomicBreakdown.new(filename)
-    puts "#{bkdown.section},#{bkdown.name}"
-  end
-}
-
+Budget.new().economic_breakdowns.each do |bkdown| 
+  puts "#{bkdown.section},#{bkdown.name}" if bkdown.is_state_entity
+end
 

@@ -14,15 +14,13 @@ require 'economic_breakdown'
 concepts = []
 
 puts 'Concept id, description'
-Dir["PGE-ROM/doc/HTM/*.HTM"].each {|filename|
-  if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
-    EconomicBreakdown.new(filename).rows.each {|row|
-      unless ( row[:expense_concept].empty? )
-        concepts << "#{row[:expense_concept]}, #{row[:description]}"
-      end
-    }
+Budget.new().economic_breakdowns.each do |bkdown|
+  bkdown.rows.each do |row|
+    unless ( row[:expense_concept].empty? )
+      concepts << "#{row[:expense_concept]}, #{row[:description]}"
+    end
   end
-}
+end
 
 puts concepts.uniq.sort
 
