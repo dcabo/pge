@@ -22,7 +22,7 @@ end
 year = '2010'
 
 # Output 'id, year, section, entity type, service, programme, concept, description, amount'
-Budget.new().economic_breakdowns.each do |bkdown|
+Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
   # State section breakdowns contain many services, while non-state ones apply to only one
   # child entity
   service = bkdown.is_state_entity ? '' : bkdown.entity

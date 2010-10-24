@@ -13,8 +13,6 @@ Los Presupuestos Generales del año 2010 están disponibles en la web del Minist
 
 Las descargas se pueden hacer "por tomos", donde un fichero PDF representa cada uno de los tomos que componen la versión física del Presupuesto, pero para procesar la información automáticamente es mucho mejor la versión "normal", que incluye una versión HTML de cada uno de los artículos del Presupuesto.
 
-Una vez descargados, copiar la carpeta `PGE-ROM`, que contiene todos los ficheros HTML, a la instancia local de este repositorio. La carpeta debe llamarse `PGE-ROM`, los scripts ahora mismo tiene las rutas hard-codeadas.
-
 [1]: http://www.sgpg.pap.meh.es/SITIOS/SGPG/ES-ES/PRESUPUESTOS/Paginas/PGE2010.aspx
 [2]: http://www.sgpg.pap.meh.es/sitios/sgpg/es-ES/Presupuestos/Presupuestos/Documents/PROYECTO/LIBRO%20AZULv3.pdf
 
@@ -28,7 +26,9 @@ Extracción de organismos de primer nivel
 
 'Sección' es el término en los Presupuestos para las entidades de más alto nivel en el organigrama de la Administración: básicamente Ministerios, pero también organismos del Estado como las Cortes Generales o el Tribunal Constitucional.
 
-    > ./extract_top_level_sections.rb
+Al ejecutar el script, debemos pasarle como parámetro la ruta a la carpeta `PGE-ROM` de los presupuestos a analizar. 
+
+    > ./extract_top_level_sections.rb <ruta>
 
 Extracción de organismos de segundo nivel
 -----------------------------------------
@@ -37,7 +37,7 @@ Dentro de las secciones (i.e. Ministerios y similares) se encuentran los 'servic
 
 Para extraer la lista de organismos de los Presupuestos, ejecutar:
 
-    > ./extract_child_sections.rb 
+    > ./extract_child_sections.rb <ruta>
 
 La lista resultante debería coincidir con la Estructura Orgánica que se muestra en el Libro Azul de los Presupuestos a partir de la página 66.
 

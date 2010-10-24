@@ -4,7 +4,7 @@ require 'budget'
 require 'economic_breakdown'
 
 puts 'Id,Sección,Tipo,Organismo'
-Budget.new().economic_breakdowns.each do |bkdown|
+Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
   bkdown.children.each do |child|
     key = "#{bkdown.section}.#{bkdown.entity_type}.#{child[:id]}"
     puts "#{key},#{bkdown.section},#{bkdown.entity_type},#{child[:name]}"

@@ -14,7 +14,7 @@ require 'economic_breakdown'
 concepts = []
 
 puts 'Concept id, description'
-Budget.new().economic_breakdowns.each do |bkdown|
+Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
   bkdown.rows.each do |row|
     unless ( row[:expense_concept].empty? )
       concepts << "#{row[:expense_concept]}, #{row[:description]}"

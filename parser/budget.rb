@@ -54,9 +54,13 @@ N_10_E_V_3_    Anexos de personal
 
 =end
 
-class Budget  
+class Budget
+  def initialize(path)
+    @path = path || ''
+  end
+  
   def economic_breakdowns
-    Dir["PGE-ROM/doc/HTM/*.HTM"].
+    Dir[@path+'/doc/HTM/*.HTM'].
         select {|f| EconomicBreakdown.economic_breakdown? f }.
         map {|f| EconomicBreakdown.new(f) }
   end
