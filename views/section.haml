@@ -5,10 +5,14 @@
 	%thead
 		%tr
 			%th Entidad
-			%th Gasto ('000 €)
+			-@years.each do |year|
+				%th #{year}
 	%tbody
-		-@entities.each do |e|
+		-@entities.each do |heading, e|
 			%tr
 				%td
-					%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}"} #{e.description}
-				%td.right #{e.amount.to_i}
+					%a{:href=>"/section/#{e[:section_id]}/entity/#{e[:entity_id]}"} #{heading}
+				-@years.each do |year|
+					%td.right #{e[:expenses][year]}
+					
+Todas las cantidades en miles de euros.

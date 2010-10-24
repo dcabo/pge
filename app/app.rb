@@ -16,6 +16,8 @@ class StateBudgetApp < Sinatra::Base
     haml :index
   end
 
+  # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
+  
   get '/by_section' do
     all_sections = Expense.section_headings
     @years = all_sections.map{|s| s.year}.uniq
@@ -25,7 +27,10 @@ class StateBudgetApp < Sinatra::Base
   
   get '/section/:section' do
     @section = Expense.section(params[:section]).section_headings.first
-    @entities = Expense.section(params[:section]).entity_headings
+
+    all_entities = Expense.section(params[:section]).entity_headings
+    @years = all_entities.map{|s| s.year}.uniq  # TODO: duplicated
+    @entities = all_entities.consolidate_by_year_on &:description
     haml :section
   end
   
