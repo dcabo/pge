@@ -15,13 +15,12 @@ class StateBudgetApp < Sinatra::Base
   get '/' do
     haml :index
   end
-
-  # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
   
+  # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
   get '/by_section' do
     all_sections = Expense.section_headings
-    @years = all_sections.map{|s| s.year}.uniq
     @sections = all_sections.consolidate_by_year_on &:description
+    add_stats_to @sections.values
     haml :by_section
   end
   
@@ -85,5 +84,32 @@ class StateBudgetApp < Sinatra::Base
     end
     @expenses = @expenses.values.sort {|a,b| a.concept <=> b.concept }
     haml :programme
+  end
+
+
+  private
+  
+  def calculate_delta(a, b)
+    return "%.2f" % (100.0 * (b.to_f / a.to_f - 1.0)) unless a.nil? or b.nil?
+  end
+  
+  # Given a list of items, calculate the list of years (@years), total amounts per year (@totals),
+  # and beginning-to-end deltas
+  def add_stats_to(items)
+    # Calculate total amounts
+    @totals = items.inject({}) do |sum, s|
+      s[:expenses].each_key {|year| sum[year] = (sum[year]||0) + (s[:expenses][year]||0) }
+      sum
+    end
+    
+    # Get list of available years
+    @years = @totals.keys
+    
+    # Calculate delta from beginning to end
+    # TODO: Better on a yearly basis?
+    @totals[:delta] = calculate_delta(@totals[@years.first], @totals[@years.last])
+    items.each do |s|
+      s[:delta] = calculate_delta(s[:expenses][@years.first], s[:expenses][@years.last])
+    end
   end
 end
