@@ -53,8 +53,8 @@ class EconomicBreakdown
   
   private
   
-  STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_(10)_E_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
-  NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_(10)_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
+  STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_(\d\d)_[AE]_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
+  NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_(\d\d)_[AE]_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
 
   def doc
     @doc = Nokogiri::HTML(open(@filename)) if @doc.nil?  # Lazy parsing of doc, only when needed

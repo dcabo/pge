@@ -1,6 +1,6 @@
 =begin
 Parte general del nombre
-   N_[20]10_E[stado?]_V[Color]_1[Serie]_
+   N_10[Año]_E[A=proyecto,E=aprobado?]_V[Color]_1[Serie]_
 más parte específica, como:
    102[O Autonomos]_2_2[Gastos]_2[Detalle]_115[Seccion MEH]_1_2[Detalle]_1105[INE]_1
 
