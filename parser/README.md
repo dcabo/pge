@@ -21,7 +21,7 @@ Una vez descargados, copiar la carpeta `PGE-ROM`, que contiene todos los fichero
 Entendiendo la estructura de ficheros
 -------------------------------------
 
-La versión de los Presupuestos que nos hemos descargado consiste en un enorme conjunto de ficheros .HTM con nombres aparentemente crípticos. Una pequeña explicación del significado de los nombres de los ficheros se encuentra en `filenames.rb` (hasta donde yo sé).
+La versión de los Presupuestos que nos hemos descargado consiste en un enorme conjunto de ficheros .HTM con nombres aparentemente crípticos. Una pequeña explicación del significado de los nombres de los ficheros se encuentra en `budget.rb` (hasta donde yo sé).
 
 Extracción de organismos de primer nivel
 ----------------------------------------
