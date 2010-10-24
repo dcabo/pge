@@ -7,6 +7,8 @@
 			%th Entidad
 			-@years.each do |year|
 				%th #{year}
+			%th %
+				
 	%tbody
 		-@entities.each do |heading, e|
 			%tr
@@ -14,5 +16,13 @@
 					%a{:href=>"/section/#{e[:section_id]}/entity/#{e[:entity_id]}"} #{heading}
 				-@years.each do |year|
 					%td.right #{e[:expenses][year]}
-					
+				%td.right #{e[:delta]}
+
+	%tfooter
+		%tr
+			%td Total
+			-@years.each do |year|
+				%td.right #{@totals[year]}
+			%td.right #{@totals[:delta]}
+								
 Todas las cantidades en miles de euros.

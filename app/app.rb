@@ -28,8 +28,8 @@ class StateBudgetApp < Sinatra::Base
     @section = Expense.section(params[:section]).section_headings.first
 
     all_entities = Expense.section(params[:section]).entity_headings
-    @years = all_entities.map{|s| s.year}.uniq  # TODO: duplicated
     @entities = all_entities.consolidate_by_year_on &:description
+    add_stats_to @entities.values
     haml :section
   end
   
