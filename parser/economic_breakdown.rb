@@ -4,7 +4,7 @@ require 'open-uri'
 
 # TODO: Split into separate state/non-state classes?
 class EconomicBreakdown
-  attr_reader :section, :entity, :entity_type, :is_state_entity
+  attr_reader :year, :section, :entity, :entity_type, :is_state_entity
 
   def initialize(filename)
     if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
