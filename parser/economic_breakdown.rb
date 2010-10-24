@@ -16,7 +16,7 @@ class EconomicBreakdown
     @year = '20'+$1
     @entity_type = $2                       # Always 1 for state entities, 2-4 for non-state
     @section = $3                           # Parent section
-    @entity = $4 if @is_state_entity        # Id of the non-state entity
+    @entity = $4 unless @is_state_entity    # Id of the non-state entity
     @filename = filename
   end
   
