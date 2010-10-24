@@ -8,7 +8,7 @@
 
 # This is a first attempt at investigating this issue.
 
-require 'filenames'
+require 'budget'
 require 'economic_breakdown'
 
 concepts = []

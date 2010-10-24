@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'filenames'
+require 'budget'
 require 'economic_breakdown'
 
 puts 'Id,Sección,Tipo,Organismo'
