@@ -18,9 +18,6 @@ def get_uid(year, section, entity_type, service, programme, expense_concept)
   "#{year}#{section}#{entity_type}#{service}#{programme}#{expense_concept}"
 end
 
-# FIXME: For now we hardcode the year, we need to improve this
-year = '2010'
-
 # Output 'id, year, section, entity type, service, programme, concept, description, amount'
 Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
   # State section breakdowns contain many services, while non-state ones apply to only one
@@ -33,8 +30,8 @@ Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
   # Note: there is an unmatched closing amount, without an opening heading, at the end
   # of the page, containing the amount for the whole section/entity, so we don't start with
   # an empty vector
-  uid = get_uid(year, bkdown.section, bkdown.entity_type, service, programme, '')
-  open_headings = ["#{uid}|#{year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}||#{bkdown.name}"]
+  uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, programme, '')
+  open_headings = ["#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}||#{bkdown.name}"]
   
   bkdown.rows.each do |row|
     next if row[:description].empty?  # Skip empty lines
@@ -48,8 +45,8 @@ Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
     end
     
     # Print expense
-    uid = get_uid(year, bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
-    expense_description = "#{uid}|#{year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
+    uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
+    expense_description = "#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
     
     if ( row[:amount].empty? )              # opening heading
       open_headings << expense_description

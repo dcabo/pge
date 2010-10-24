@@ -2,20 +2,21 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
+# TODO: Split into separate state/non-state classes?
 class EconomicBreakdown
   attr_reader :section, :entity, :entity_type, :is_state_entity
 
   def initialize(filename)
     if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
       @is_state_entity = true
-      @entity_type = $1   # Always 1 for state entities
-      @section = $2
+    # Need to explicitely match, even if we know it to be true, so the $* below work!
     elsif ( filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )
       @is_state_entity = false
-      @entity_type = $1   # Can be 2-4
-      @section = $2       # Parent section
-      @entity = $3        # Id of the non-state entity
     end
+    @year = '20'+$1
+    @entity_type = $2                       # Always 1 for state entities, 2-4 for non-state
+    @section = $3                           # Parent section
+    @entity = $4 if @is_state_entity        # Id of the non-state entity
     @filename = filename
   end
   
@@ -52,8 +53,8 @@ class EconomicBreakdown
   
   private
   
-  STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_10_E_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
-  NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_10_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
+  STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_(10)_E_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
+  NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_(10)_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
 
   def doc
     @doc = Nokogiri::HTML(open(@filename)) if @doc.nil?  # Lazy parsing of doc, only when needed
