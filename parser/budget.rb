@@ -54,15 +54,10 @@ N_10_E_V_3_    Anexos de personal
 
 =end
 
-STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_10_E_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
-
-NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_10_E_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
-
 class Budget  
   def economic_breakdowns
-    filenames = Dir["PGE-ROM/doc/HTM/*.HTM"].select do |f| 
-      f =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN or f=~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN
-    end
-    filenames.map {|f| EconomicBreakdown.new(f) }
+    Dir["PGE-ROM/doc/HTM/*.HTM"].
+        select {|f| EconomicBreakdown.economic_breakdown? f }.
+        map {|f| EconomicBreakdown.new(f) }
   end
 end
