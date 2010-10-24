@@ -16,14 +16,14 @@ class EconomicBreakdown
       @section = $2       # Parent section
       @entity = $3        # Id of the non-state entity
     end
-    @doc = Nokogiri::HTML(open(filename))
+    @filename = filename
   end
   
   def name
     # Note: the name may include accented characters, so '\w' doesn't work in regex
     @is_state_entity ?
-      @doc.css('.S0ESTILO2').text.strip =~ /^Sección: \d\d (.+)$/ :
-      @doc.css('.S0ESTILO3').last.text.strip =~ /^Organismo: \d\d\d (.+)$/
+      doc.css('.S0ESTILO2').text.strip =~ /^Sección: \d\d (.+)$/ :
+      doc.css('.S0ESTILO3').last.text.strip =~ /^Organismo: \d\d\d (.+)$/
     $1
   end
   
@@ -35,7 +35,7 @@ class EconomicBreakdown
   
   def rows
     # Iterate through HTML table, skipping header
-    @doc.css('table.S0ESTILO8 tr')[1..-1].map do |row|
+    doc.css('table.S0ESTILO8 tr')[1..-1].map do |row|
       columns = row.css('td').map{|td| td.text.strip}
       columns.insert(0,'') if !@is_state_entity # They lack the first column, 'service'
       { :service => columns[0], 
@@ -44,5 +44,12 @@ class EconomicBreakdown
         :description => columns[3],
         :amount => (columns[4] != '') ? columns[4] : columns[5] }
     end
+  end
+  
+  private
+  
+  def doc
+    @doc = Nokogiri::HTML(open(@filename)) if @doc.nil?  # Lazy parsing of doc, only when needed
+    @doc
   end
 end
