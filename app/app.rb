@@ -58,7 +58,12 @@ class StateBudgetApp < Sinatra::Base
     @section = Expense.section(params[:section]).section_headings.first
     @entity = Expense.entity(params[:section], params[:entity]).entity_headings.first
     @programme_name = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).programme_headings.first.description
-    @expenses = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).expenses
+    
+    all_expenses = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).expenses
+    @expenses, @years = all_expenses.consolidate_by_year_on {|e| "#{e.concept} #{e.description}"}
+    
+    @totals = calculate_total_expenses(@expenses.values.select{|e| e[:concept].length==1}, @years)
+    add_deltas(@expenses.values, @years)    
     haml :programme
   end
   
