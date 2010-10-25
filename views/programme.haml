@@ -3,22 +3,32 @@
 -if not @entity.nil? and not @section.nil?
 	%h2 #{@section.description}
 	%h3 #{@entity.description}
-	%h4 #{@programme.description}
-	%h4 Total: #{@programme.amount.to_digits} € ('000 €)
+	%h4 #{@programme_name}
 -else
-	%h2 #{@programmes.first.description}
-	%h4 Total: #{@total_amount.to_digits} € ('000 €)
+	%h2 #{@programme_name}
 
 %table#pge.display
 	%thead
 		%tr
-			%th Código
 			%th Descripción
-			%th Gasto ('000)
+			-@years.each do |year|
+				%th #{year}
+			%th %
+
 	%tbody
-		-@expenses.each do |e|
+		-@expenses.each do |heading, e|
 			%tr
 				-# The extra space '&nbsp' is a quick hack so the table is sorted as text, not number
-				%td #{e.concept}&nbsp;
-				%td #{e.description}
-				%td.right #{e.amount.to_i}
+				%td #{heading}
+				-@years.each do |year|
+					%td.right #{e[:expenses][year]}
+				%td.right #{e[:delta]}
+				
+	%tfooter
+		%tr
+			%td Total
+			-@years.each do |year|
+				%td.right #{@totals[year]}
+			%td.right #{@totals[:delta]}
+
+Todas las cantidades en miles de euros.

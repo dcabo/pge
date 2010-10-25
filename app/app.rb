@@ -31,7 +31,8 @@ class StateBudgetApp < Sinatra::Base
       s[:expenses].each_key {|year| s[:expenses][year] = bottom_up_totals[s[:section_id]][:expenses][year] }
     end
     
-    @totals = calculate_stats(@sections.values, @years)
+    @totals = calculate_total_expenses(@sections.values, @years)
+    add_deltas(@sections.values, @years)
     haml :by_section
   end
   
@@ -40,7 +41,9 @@ class StateBudgetApp < Sinatra::Base
 
     all_entities = Expense.section(params[:section]).entity_headings
     @entities, @years = all_entities.consolidate_by_year_on &:description
-    @totals = calculate_stats(@entities.values, @years)
+    
+    @totals = calculate_total_expenses(@entities.values, @years)
+    add_deltas(@entities.values, @years)
     haml :section
   end
   
@@ -54,7 +57,7 @@ class StateBudgetApp < Sinatra::Base
   get '/section/:section/entity/:entity/programme/:programme' do
     @section = Expense.section(params[:section]).section_headings.first
     @entity = Expense.entity(params[:section], params[:entity]).entity_headings.first
-    @programme = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).programme_headings.first
+    @programme_name = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).programme_headings.first.description
     @expenses = Expense.entity(params[:section], params[:entity]).programme(params[:programme]).expenses
     haml :programme
   end
@@ -63,29 +66,26 @@ class StateBudgetApp < Sinatra::Base
   # is the result of adding up the budgets of all the entities assigned to it.
   get '/by_programme' do
     @programmes, @years = Expense.programme_headings.consolidate_by_year_on &:description
-    @totals = calculate_stats(@programmes.values, @years)
+    
+    @totals = calculate_total_expenses(@programmes.values, @years)
+    add_deltas(@programmes.values, @years)
     haml :by_programme
   end
   
+  # TODO: Do we want to show also the expenses split per entity?
   get '/programme/:programme' do
-    @programmes = Expense.programme_headings.programme(params[:programme])
-    @total_amount = @programmes.inject(0) {|sum,p| sum+p.amount}
+    @programme_name = Expense.programme_headings.programme(params[:programme]).first.description
     
-    # Since a program can be split across many entities, we need to consolidate the expense list and add up the amounts
-    # TODO: Do we want to show also the expenses split per entity?
-    @expenses = {}
-    Expense.programme(params[:programme]).expenses.each do |e|
-      # Note that for the same 'economic concept code' we may have more than one description *sigh* so,
-      # in order not to lose information, we group by concept _and_ description
-      key = e.concept+e.description
-      
-      if (previous=@expenses[key]).nil? 
-        @expenses[key] = e
-      else
-        previous.amount += e.amount
-      end
-    end
-    @expenses = @expenses.values.sort {|a,b| a.concept <=> b.concept }
+    all_expenses = Expense.programme(params[:programme]).expenses
+    # Note that for the same 'economic concept code' we may have more than one description *sigh* 
+    # across programme assignments, and the same description can be given to entries in different
+    # categories with different codes *sigh again*. In order not to lose information, we group by 
+    # concept _and_ description
+    @expenses, @years = all_expenses.consolidate_by_year_on {|e| "#{e.concept} #{e.description}"}
+    
+    # When calculating programme total expenses, we count only the top level, or we'd count twice
+    @totals = calculate_total_expenses(@expenses.values.select{|e| e[:concept].length==1}, @years)
+    add_deltas(@expenses.values, @years)
     haml :programme
   end
 
@@ -93,23 +93,24 @@ class StateBudgetApp < Sinatra::Base
   private
   
   def calculate_delta(a, b)
-    return "%.2f" % (100.0 * (b.to_f / a.to_f - 1.0)) unless a.nil? or b.nil?
+    return "%.2f" % (100.0 * (b.to_f / a.to_f - 1.0)) unless a.nil? or b.nil? or a==0
   end
   
-  # Given a list of items, calculate total amounts per year and add beginning-to-end deltas
-  def calculate_stats(items, years)
-    # Calculate total amounts
+  # Given a list of items, calculate total expense amounts per year
+  def calculate_total_expenses(items, years)
     totals = items.inject({}) do |sum, s|
       s[:expenses].each_key {|year| sum[year] = (sum[year]||0) + (s[:expenses][year]||0) }
       sum
     end
-    
-    # Calculate delta from beginning to end
-    # TODO: Better on a yearly basis?
     totals[:delta] = calculate_delta(totals[years.first], totals[years.last])
+    totals
+  end
+    
+  # Given a list of items, add beginning-to-end deltas
+  # TODO: Better on a yearly basis?
+  def add_deltas(items, years)
     items.each do |s|
       s[:delta] = calculate_delta(s[:expenses][years.first], s[:expenses][years.last])
     end
-    totals
   end
 end
