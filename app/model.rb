@@ -68,6 +68,7 @@ class DataMapper::Collection
         aggregate = {:expenses => {}}
         aggregate[:section_id] = i.section
         aggregate[:entity_id] = i.entity_id
+        aggregate[:programme] = i.programme
       end
       aggregate[:expenses][i.year] = i.amount.to_i + (aggregate[:expenses][i.year]||0)
       aggregates[key] = aggregate

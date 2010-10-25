@@ -4,10 +4,24 @@
 	%thead
 		%tr
 			%th Programa
-			%th Gasto ('000 €)
+			-@years.each do |year|
+				%th #{year}
+			%th %
+		
 	%tbody
-		-@programmes.each do |p|
+		-@programmes.each do |heading, p|
 			%tr
 				%td
-					%a{:href=>"/programme/#{p.programme}"} #{p.programme} #{p.description}
-				%td.right #{p.amount.to_i}
+					%a{:href=>"/programme/#{p[:programme]}"} #{p[:programme]} #{heading}
+				-@years.each do |year|
+					%td.right #{p[:expenses][year]}
+				%td.right #{p[:delta]}
+					
+	%tfooter
+		%tr
+			%td Total
+			-@years.each do |year|
+				%td.right #{@totals[year]}
+			%td.right #{@totals[:delta]}
+
+Todas las cantidades en miles de euros.

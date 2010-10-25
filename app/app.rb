@@ -18,8 +18,7 @@ class StateBudgetApp < Sinatra::Base
   
   # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
   get '/by_section' do
-    all_sections = Expense.section_headings
-    @sections, @years = all_sections.consolidate_by_year_on &:description
+    @sections, @years = Expense.section_headings.consolidate_by_year_on &:description
     
     # This gets complicated, but is needed given the structure of the incoming data.
     # State sections and entities are displayed together in one page, and a total is given
@@ -60,19 +59,11 @@ class StateBudgetApp < Sinatra::Base
     haml :programme
   end
   
+  # Note that a program can be split across many entities so, for a particular programme, the total budget
+  # is the result of adding up the budgets of all the entities assigned to it.
   get '/by_programme' do
-    # Since a program can be split across many entities, we need to consolidate the list and add up the amounts.
-    # Surprisingly, there doesn't seem to be a way to do this in DataMapper
-    # TODO: Could be done through direct SQL, is it worth it?
-    @programmes = {}
-    Expense.programme_headings.each do |p|
-      if (previous=@programmes[p.programme]).nil? 
-        @programmes[p.programme] = p 
-      else
-        previous.amount += p.amount
-      end
-    end
-    @programmes = @programmes.values.sort {|a,b| a.programme <=> b.programme }
+    @programmes, @years = Expense.programme_headings.consolidate_by_year_on &:description
+    @totals = calculate_stats(@programmes.values, @years)
     haml :by_programme
   end
   
