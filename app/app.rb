@@ -19,8 +19,20 @@ class StateBudgetApp < Sinatra::Base
   # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
   get '/by_section' do
     all_sections = Expense.section_headings
-    @sections = all_sections.consolidate_by_year_on &:description
-    add_stats_to @sections.values
+    @sections, @years = all_sections.consolidate_by_year_on &:description
+    
+    # This gets complicated, but is needed given the structure of the incoming data.
+    # State sections and entities are displayed together in one page, and a total is given
+    # for the section (~ 'Ministerio'). But there are also non-state agencies that depend
+    # organically from that section; the budget for these agencies is not included in the 
+    # total, since they're listed separately, so we recalculate them here.
+    # (Consecuence of having such a poor data model right now.)
+    bottom_up_totals, = Expense.entity_headings.consolidate_by_year_on &:section
+    @sections.each_value do |s|
+      s[:expenses].each_key {|year| s[:expenses][year] = bottom_up_totals[s[:section_id]][:expenses][year] }
+    end
+    
+    @totals = calculate_stats(@sections.values, @years)
     haml :by_section
   end
   
@@ -28,8 +40,8 @@ class StateBudgetApp < Sinatra::Base
     @section = Expense.section(params[:section]).section_headings.first
 
     all_entities = Expense.section(params[:section]).entity_headings
-    @entities = all_entities.consolidate_by_year_on &:description
-    add_stats_to @entities.values
+    @entities, @years = all_entities.consolidate_by_year_on &:description
+    @totals = calculate_stats(@entities.values, @years)
     haml :section
   end
   
@@ -93,23 +105,20 @@ class StateBudgetApp < Sinatra::Base
     return "%.2f" % (100.0 * (b.to_f / a.to_f - 1.0)) unless a.nil? or b.nil?
   end
   
-  # Given a list of items, calculate the list of years (@years), total amounts per year (@totals),
-  # and beginning-to-end deltas
-  def add_stats_to(items)
+  # Given a list of items, calculate total amounts per year and add beginning-to-end deltas
+  def calculate_stats(items, years)
     # Calculate total amounts
-    @totals = items.inject({}) do |sum, s|
+    totals = items.inject({}) do |sum, s|
       s[:expenses].each_key {|year| sum[year] = (sum[year]||0) + (s[:expenses][year]||0) }
       sum
     end
     
-    # Get list of available years
-    @years = @totals.keys
-    
     # Calculate delta from beginning to end
     # TODO: Better on a yearly basis?
-    @totals[:delta] = calculate_delta(@totals[@years.first], @totals[@years.last])
+    totals[:delta] = calculate_delta(totals[years.first], totals[years.last])
     items.each do |s|
-      s[:delta] = calculate_delta(s[:expenses][@years.first], s[:expenses][@years.last])
+      s[:delta] = calculate_delta(s[:expenses][years.first], s[:expenses][years.last])
     end
+    totals
   end
 end

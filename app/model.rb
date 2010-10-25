@@ -55,12 +55,13 @@ end
 
 # We add a convenience method to the DataMapper Collection class in order to 
 # consolidate the results as we want them. It takes a block method to use as the 
-# key to group by
+# key to group by. The expenses for two items with the same key are added together.
 class DataMapper::Collection 
   
-  # TODO: A bit of a hack, really; worth it? 
+  # TODO: A bit of a hack, really, putting it inside the DataMapper class. worth it?
   def consolidate_by_year_on
     aggregates = {}
+    years = Set.new()
     self.each {|i|
       key = yield(i)
       if (aggregate = aggregates[key]).nil?
@@ -68,10 +69,11 @@ class DataMapper::Collection
         aggregate[:section_id] = i.section
         aggregate[:entity_id] = i.entity_id
       end
-      aggregate[:expenses][i.year] = i.amount.to_i
+      aggregate[:expenses][i.year] = i.amount.to_i + (aggregate[:expenses][i.year]||0)
       aggregates[key] = aggregate
+      years.add(i.year)
     }
-    aggregates
+    return aggregates, years.to_a
   end
 end
 
