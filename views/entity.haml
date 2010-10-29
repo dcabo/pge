@@ -5,11 +5,25 @@
 %table#pge.display
 	%thead
 		%tr
-			%th Entidad
-			%th Gasto ('000 €)
+			%th Descripción
+			-@years.each do |year|
+				%th #{year}
+			%th %
+			
 	%tbody
-		-@programmes.each do |e|
+		-@programmes.each do |heading, e|
 			%tr
 				%td
-					%a{:href=>"/section/#{e.section}/entity/#{e.entity_id}/programme/#{e.programme}"} #{e.programme} #{e.description}
-				%td.right #{e.amount.to_i}
+					%a{:href=>"/section/#{e[:section_id]}/entity/#{e[:entity_id]}/programme/#{e[:programme]}"} #{e[:programme]} #{heading}
+				-@years.each do |year|
+					%td.right #{e[:expenses][year]}
+				%td.right #{e[:delta]}
+
+	%tfooter
+		%tr
+			%td Total
+			-@years.each do |year|
+				%td.right #{@totals[year]}
+			%td.right #{@totals[:delta]}
+
+Todas las cantidades en miles de euros.

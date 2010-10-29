@@ -18,7 +18,6 @@
 	%tbody
 		-@expenses.each do |heading, e|
 			%tr
-				-# The extra space '&nbsp' is a quick hack so the table is sorted as text, not number
 				%td #{heading}
 				-@years.each do |year|
 					%td.right #{e[:expenses][year]}
