@@ -21,7 +21,7 @@ class StateBudgetApp < Sinatra::Base
     @sections, @years = Expense.section_headings.consolidate_by_year_on &:description
     
     #  This gets complicated, but is needed given the structure of the incoming data.
-    # State sections and entities are displayed together in one page, and a total is given
+    # State sections and entities are displayed together in one budget page, and a total is given
     # for the section (~ 'Ministerio'). But there are also non-state agencies that depend
     # organically from that section; the budget for these agencies is not included in those
     # totals, since they're listed separately, so we need to recalculate them here.
