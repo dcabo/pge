@@ -12,7 +12,7 @@
 			
 	%tbody
 		-@programmes.each do |heading, e|
-			%tr
+			%tr{:class => e[:is_internal_transfer] ? "internalTransfer" : ""}
 				%td
 					%a{:href=>"/section/#{e[:section_id]}/entity/#{e[:entity_id]}/programme/#{e[:programme]}"} #{e[:programme]} #{heading}
 				-@years.each do |year|
@@ -21,7 +21,7 @@
 
 	%tfooter
 		%tr
-			%td Total
+			%td Total Consolidado (excluye transferencias internas)
 			-@years.each do |year|
 				%td.right #{@totals[year]}
 			%td.right #{@totals[:delta]}

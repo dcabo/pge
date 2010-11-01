@@ -212,11 +212,11 @@ table.display tr.even.gradeX {
 	background-color: #ffeeee;
 }
 
-table.display tr.odd.gradeU {
+table.display tr.odd.internalTransfer {
 	background-color: #ddd;
 }
 
-table.display tr.even.gradeU {
+table.display tr.even.internalTransfer {
 	background-color: #eee;
 }
 
@@ -437,27 +437,27 @@ tr.even.gradeX td.sorting_3 {
 	background-color: #ffe2e2;
 }
 
-tr.odd.gradeU td.sorting_1 {
+tr.odd.internalTransfer td.sorting_1 {
 	background-color: #c4c4c4;
 }
 
-tr.odd.gradeU td.sorting_2 {
+tr.odd.internalTransfer td.sorting_2 {
 	background-color: #d1d1d1;
 }
 
-tr.odd.gradeU td.sorting_3 {
+tr.odd.internalTransfer td.sorting_3 {
 	background-color: #d1d1d1;
 }
 
-tr.even.gradeU td.sorting_1 {
+tr.even.internalTransfer td.sorting_1 {
 	background-color: #d5d5d5;
 }
 
-tr.even.gradeU td.sorting_2 {
+tr.even.internalTransfer td.sorting_2 {
 	background-color: #e2e2e2;
 }
 
-tr.even.gradeU td.sorting_3 {
+tr.even.internalTransfer td.sorting_3 {
 	background-color: #e2e2e2;
 }
 
@@ -529,8 +529,8 @@ table.display tr.gradeX {
 	background-color: #ffdddd;
 }
 
-table.display tr.gradeU {
-	background-color: #ddd;
+table.display tr.internalTransfer {
+	background-color: #eee;
 }
 
 div.box {
