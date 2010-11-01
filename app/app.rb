@@ -69,7 +69,8 @@ class StateBudgetApp < Sinatra::Base
     all_programmes = Expense.entity(params[:section], params[:entity]).programme_headings
     @programmes, @years = all_programmes.consolidate_by_year_on &:description
     
-    @totals = calculate_total_expenses(@programmes.values, @years)
+    # Note that we don't count internal transfers on the totals!
+    @totals = calculate_total_expenses(@programmes.values.find_all{|p| !p[:is_internal_transfer]}, @years)
     add_deltas(@programmes.values, @years)
     haml :entity
   end
@@ -92,7 +93,8 @@ class StateBudgetApp < Sinatra::Base
   get '/by_programme' do
     @programmes, @years = Expense.programme_headings.consolidate_by_year_on &:description
     
-    @totals = calculate_total_expenses(@programmes.values, @years)
+    # Note that we don't count internal transfers on the totals!
+    @totals = calculate_total_expenses(@programmes.values.find_all{|p| !p[:is_internal_transfer]}, @years)
     add_deltas(@programmes.values, @years)
     haml :by_programme
   end

@@ -16,7 +16,11 @@ class Expense
   property :concept,      String, :length => 5
   property :description,  String, :length => 500
   property :amount,       Decimal
-
+  
+  def internal_transfer?
+    programme == '000X'
+  end
+  
   # Convenience scope methods
   def self.section(section)
     all(:section => section)
@@ -74,6 +78,7 @@ class DataMapper::Collection
         aggregate[:entity_id] = i.entity_id
         aggregate[:programme] = i.programme
         aggregate[:concept] = i.concept
+        aggregate[:is_internal_transfer] = i.internal_transfer? # TODO: Smells! Create MultiYearExpense class?
       end
       aggregate[:expenses][i.year] = i.amount.to_i + (aggregate[:expenses][i.year]||0)
       aggregates[key] = aggregate
