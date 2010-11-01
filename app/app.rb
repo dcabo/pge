@@ -20,13 +20,20 @@ class StateBudgetApp < Sinatra::Base
   get '/by_section' do
     @sections, @years = Expense.section_headings.consolidate_by_year_on &:description
     
-    # This gets complicated, but is needed given the structure of the incoming data.
+    #  This gets complicated, but is needed given the structure of the incoming data.
     # State sections and entities are displayed together in one page, and a total is given
     # for the section (~ 'Ministerio'). But there are also non-state agencies that depend
-    # organically from that section; the budget for these agencies is not included in the 
-    # total, since they're listed separately, so we recalculate them here.
-    # (Consecuence of having such a poor data model right now.)
-    bottom_up_totals, = Expense.entity_headings.consolidate_by_year_on &:section
+    # organically from that section; the budget for these agencies is not included in those
+    # totals, since they're listed separately, so we need to recalculate them here.
+    #
+    #  Initially we added up all the entities' subtotals, but that counted the internal transfers
+    # twice (the transfer payment in the parent, plus the actual expense in the child). So 
+    # now we calculate the section totals adding upwards from the programme level, 
+    # ignoring the 'internal transfers' programme.
+    #
+    #  The results should match the table in budget pages like N_10_E_R_6_2_R_3_1.HTM
+    programmes = Expense.programme_headings.not_internal_transfer
+    bottom_up_totals, = programmes.consolidate_by_year_on &:section
     @sections.each_value do |s|
       s[:expenses].each_key {|year| s[:expenses][year] = bottom_up_totals[s[:section_id]][:expenses][year] }
     end

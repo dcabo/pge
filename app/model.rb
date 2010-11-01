@@ -30,6 +30,10 @@ class Expense
     all(:programme => programme)
   end
   
+  def self.not_internal_transfer
+    all(:programme.not => '000X')
+  end
+  
     
   # Top level section headings are the ones not belonging to any entity (2nd level)
   def self.section_headings
