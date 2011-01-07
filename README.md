@@ -18,6 +18,6 @@ Arrancando la aplicación
  1. Para rellenar la nueva base de datos con los datos de los Presupuestos, sigue las instrucciones del [parser][2].
  
 [1]: http://gembundler.com/
-[2]: ./tree/master/parser
+[2]: /dcabo/pge/tree/master/parser
 
     
