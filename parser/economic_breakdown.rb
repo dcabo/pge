@@ -22,9 +22,13 @@ class EconomicBreakdown
   
   def name
     # Note: the name may include accented characters, so '\w' doesn't work in regex
-    @is_state_entity ?
-      doc.css('.S0ESTILO2').text.strip =~ /^Sección: \d\d (.+)$/ :
+    if @is_state_entity
+      # TODO: check years before 2008
+      section_css_class = (year=='2008') ? '.S0ESTILO4' : '.S0ESTILO2'
+      doc.css(section_css_class).text.strip =~ /^Sección: \d\d (.+)$/
+    else
       doc.css('.S0ESTILO3').last.text.strip =~ /^Organismo: \d\d\d (.+)$/
+    end
     $1
   end
   
@@ -36,7 +40,9 @@ class EconomicBreakdown
   
   def rows
     # Iterate through HTML table, skipping header
-    doc.css('table.S0ESTILO8 tr')[1..-1].map do |row|
+    rows = doc.css('table.S0ESTILO9 tr')[1..-1]               # 2008 (and earlier?)
+    rows = doc.css('table.S0ESTILO8 tr')[1..-1] if rows.nil?  # 2009 onwards
+    rows.map do |row|
       columns = row.css('td').map{|td| td.text.strip}
       columns.insert(0,'') if !@is_state_entity # They lack the first column, 'service'
       { :service => columns[0], 
