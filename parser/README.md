@@ -42,3 +42,19 @@ Para extraer la lista de organismos de los Presupuestos, ejecutar:
 La lista resultante debería coincidir con la Estructura Orgánica que se muestra en el Libro Azul de los Presupuestos a partir de la página 66.
 
 Si no te apetece hacer todo lo anterior, y sólo quieres ver el resultado final, mira en `/output`.
+
+Extracción de gastos presupuestados
+-----------------------------------
+
+Para extraer los datos de gastos de los Presupuestos, ejecutar:
+
+    > ./extract_expenses.rb > output/expenses.csv
+
+Para importar los datos del fichero CSV generado en la base de datos de la aplicación, de momento usamos la consola de administración de sqlite3:
+
+    > sqlite3 development.db
+    sqlite3> .mode csv
+    sqlite3> .separator "|"
+    sqlite3> .import parser/output/expenses.csv expenses
+    sqlite3> .exit
+

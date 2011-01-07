@@ -15,23 +15,9 @@ Arrancando la aplicación
     
  1. Una base de datos vacía, `development.db`, se crea automáticamente en el directorio raíz al arrancar la aplicación por primera vez.
 
+ 1. Para rellenar la nueva base de datos con los datos de los Presupuestos, sigue las instrucciones del [parser][2].
+ 
 [1]: http://gembundler.com/
+[2]: tree/master/parser
 
-Rellenando la Base de Datos
----------------------------
-
- 1. Extraer los datos de gastos de los presupuestos usando los scripts en `parser/`
- 
-    > $ ./extract_expenses.rb > output/expenses.csv
-     
- 1. Entrar en la consola de administración de sqlite3:
- 
-    > $ sqlite3 development.db
-    
- 1. Importar los datos a partir del fichero CSV generado anteriormente:
- 
-    > sqlite3> .mode csv    
-    > sqlite3> .separator "|"    
-    > sqlite3> .import parser/output/expenses.csv expenses    
-    > sqlite3> .exit    
     
