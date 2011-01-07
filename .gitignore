@@ -1,4 +1,5 @@
 development.db
 .bundle
+cofog*.csv
 *.xls
 *.xlsx
