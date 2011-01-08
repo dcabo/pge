@@ -59,9 +59,9 @@ class Budget
     @path = path || ''
   end
   
-  def economic_breakdowns
+  def entity_breakdowns
     Dir[@path+'/doc/HTM/*.HTM'].
-        select {|f| EconomicBreakdown.economic_breakdown? f }.
-        map {|f| EconomicBreakdown.new(f) }
+        select {|f| EntityBreakdown.entity_breakdown? f }.
+        map {|f| EntityBreakdown.new(f) }
   end
 end

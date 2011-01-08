@@ -3,14 +3,14 @@ require 'nokogiri'
 require 'open-uri'
 
 # TODO: Split into separate state/non-state classes?
-class EconomicBreakdown
+class EntityBreakdown
   attr_reader :year, :section, :entity, :entity_type, :is_state_entity
 
   def initialize(filename)
-    if ( filename =~ STATE_ENTITY_EXPENSES_ECON_BKDOWN )
+    if ( filename =~ STATE_ENTITY_EXPENSES_BKDOWN )
       @is_state_entity = true
     # Need to explicitely match, even if we know it to be true, so the $* below work!
-    elsif ( filename =~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN )
+    elsif ( filename =~ NON_STATE_ENTITY_EXPENSES_BKDOWN )
       @is_state_entity = false
     end
     @year = '20'+$1
@@ -53,14 +53,14 @@ class EconomicBreakdown
     end
   end
   
-  def self.economic_breakdown? (filename)
-    filename=~STATE_ENTITY_EXPENSES_ECON_BKDOWN or filename=~ NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN
+  def self.entity_breakdown? (filename)
+    filename=~STATE_ENTITY_EXPENSES_BKDOWN or filename=~ NON_STATE_ENTITY_EXPENSES_BKDOWN
   end
   
   private
   
-  STATE_ENTITY_EXPENSES_ECON_BKDOWN =      /N_(\d\d)_[AE]_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
-  NON_STATE_ENTITY_EXPENSES_ECON_BKDOWN =  /N_(\d\d)_[AE]_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
+  STATE_ENTITY_EXPENSES_BKDOWN =      /N_(\d\d)_[AE]_V_1_10(1)_2_2_2_1(\d\d)_1_1_1.HTM/;
+  NON_STATE_ENTITY_EXPENSES_BKDOWN =  /N_(\d\d)_[AE]_V_1_10([234])_2_2_2_1(\d\d)_1_2_1(\d\d\d)_1.HTM/;
 
   def doc
     @doc = Nokogiri::HTML(open(@filename)) if @doc.nil?  # Lazy parsing of doc, only when needed

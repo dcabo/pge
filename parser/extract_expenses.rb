@@ -7,7 +7,7 @@
 # hence, adding up all the subconcepts will result in a much smaller amount.
 
 require 'budget'
-require 'economic_breakdown'
+require 'entity_breakdown'
 
 def convert_number(amount)
   amount.delete('.').tr(',','.')
@@ -19,7 +19,7 @@ def get_uid(year, section, entity_type, service, programme, expense_concept)
 end
 
 # Output 'id, year, section, entity type, service, programme, concept, description, amount'
-Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
+Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
   # State section breakdowns contain many services, while non-state ones apply to only one
   # child entity
   service = bkdown.is_state_entity ? '' : bkdown.entity
