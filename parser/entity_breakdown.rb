@@ -33,7 +33,7 @@ class EntityBreakdown
   
   def children
     is_state_entity? ?
-      expenses.map {|row| {:id=>row[:service], :name=>row[:description]} if not row[:service].empty? }.compact :
+      expenses.map {|row| {:id=>row[:service], :name=>row[:description]} if row[:programme].empty? }.compact :
       [{:id => @entity, :name => name}]
   end
   
