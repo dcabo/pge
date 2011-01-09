@@ -32,12 +32,14 @@ namespace 'expenses' do
     ])
   end
 
-  desc "Import expense data into DB from given file"
-  task :import, [:filename] do |t, args|
+  desc "Import expense data into DB for given year"
+  task :import, [:year] do |t, args|
+    filename = "parser/output/#{args.year}/expenses.csv"
+    puts "Importing file #{filename}..."
     run_sqlite3_commands([
       '.mode csv',
       '.separator "|"',
-      ".import #{args.filename} expenses",
+      ".import #{filename} expenses",
       '.exit'
     ])
   end
