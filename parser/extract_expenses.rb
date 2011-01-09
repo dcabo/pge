@@ -22,7 +22,7 @@ end
 Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
   # State section breakdowns contain many services, while non-state ones apply to only one
   # child entity
-  service = bkdown.is_state_entity ? '' : bkdown.entity
+  service = bkdown.is_state_entity? ? '' : bkdown.entity
   programme = ''
   
   # The total amounts for service/programme/chapter headings is shown when the heading is closed,
