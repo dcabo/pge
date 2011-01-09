@@ -19,84 +19,46 @@ def get_uid(year, section, entity_type, service, programme, expense_concept)
   "#{year}#{section}#{entity_type}#{service}#{programme}#{expense_concept}"
 end
 
-def extract_entity_expenses
-  # Output 'id, year, section, entity type, service, programme, concept, description, amount'
-  Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
-    # State section breakdowns contain many services, while non-state ones apply to only one
-    # child entity
-    service = bkdown.is_state_entity? ? '' : bkdown.entity
-    programme = ''
+# Output 'id, year, section, entity type, service, programme, concept, description, amount'
+def extract_expenses(bkdown, open_headings)
+  bkdown.expenses.each do |row|
+    uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, row[:service], row[:programme], row[:expense_concept])
+    expense_description = "#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{row[:service]}|#{row[:programme]}|#{row[:expense_concept]}|#{row[:description]}"
   
     # The total amounts for service/programme/chapter headings is shown when the heading is closed,
-    # not opened, so we need to keep track of the open ones.
-    # Note: there is an unmatched closing amount, without an opening heading, at the end
-    # of the page, containing the amount for the whole section/entity, so we don't start with
-    # an empty vector
-    uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, programme, '')
-    open_headings = ["#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}||#{bkdown.name}"]
-  
-    bkdown.rows.each do |row|
-      next if row[:description].empty?  # Skip empty lines
-    
-      # Keep track of current service/programme
-      if not row[:service].empty?
-        service = row[:service] 
-        programme = ''
-      elsif not row[:programme].empty?
-        programme = row[:programme] 
-      end
-    
-      # Print expense
-      uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, programme, row[:expense_concept])
-      expense_description = "#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{programme}|#{row[:expense_concept]}|#{row[:description]}"
-    
-      if ( row[:amount].empty? )              # opening heading
-        open_headings << expense_description
-      elsif ( row[:expense_concept].empty? )  # closing heading
-        last_heading = open_headings.pop()
-        puts "#{last_heading}|#{convert_number(row[:amount])}" unless last_heading.nil?
-      else                                    # standard data row
-        puts "#{expense_description}|#{convert_number(row[:amount])}"
-      end
+    # not opened, so we need to keep track of the open ones, and print them when closed.
+    if ( row[:amount].empty? )              # opening heading
+      open_headings << expense_description
+    elsif ( row[:expense_concept].empty? )  # closing heading
+      last_heading = open_headings.pop()
+      puts "#{last_heading}|#{convert_number(row[:amount])}" unless last_heading.nil?
+    else                                    # standard data row
+      puts "#{expense_description}|#{convert_number(row[:amount])}"
     end
   end
 end
 
-def extract_programme_expenses
-  # FIXME: Refactor into code above 
-  Budget.new(ARGV[0]).programme_breakdowns.each do |bkdown|
-    service = ''
+def extract_entity_expenses
+  Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
+    # Note: there is an unmatched closing amount, without an opening heading, at the end
+    # of the page, containing the amount for the whole section/entity, so we don't start with
+    # an empty vector
+    service = bkdown.is_state_entity? ? '' : bkdown.entity
+    uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, '', '')
+    open_headings = ["#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|||#{bkdown.name}"]
   
-    # The total amounts for service/programme/chapter headings is shown when the heading is closed,
-    # not opened, so we need to keep track of the open ones.
-    open_headings = []
+    extract_expenses(bkdown, open_headings)
+  end
+end
+
+def extract_programme_expenses
+  Budget.new(ARGV[0]).programme_breakdowns.each do |bkdown|  
     # TODO: We don't want to insert into the DB (yet?) a programme subtotal across all entities. 
     #       It would probably break some query (as in counting twice) in the app visualizing 
     #       the data (PGE). A consecuence of the poor current data model, and having data for 
     #       different levels of detail sitting together in the same table. Another vote for
     #       re-doing the data model.
-  
-    bkdown.rows.each do |row|
-      next if row[:description].empty?  # Skip empty lines
-    
-      # Keep track of current service
-      if not row[:service].empty?
-        service = row[:service]
-      end
-    
-      # Print expense
-      uid = get_uid(bkdown.year, bkdown.section, bkdown.entity_type, service, bkdown.programme, row[:expense_concept])
-      expense_description = "#{uid}|#{bkdown.year}|#{bkdown.section}|#{bkdown.entity_type}|#{service}|#{bkdown.programme}|#{row[:expense_concept]}|#{row[:description]}"
-    
-      if ( row[:amount].empty? )              # opening heading
-        open_headings << expense_description
-      elsif ( row[:expense_concept].empty? )  # closing heading
-        last_heading = open_headings.pop()
-        puts "#{last_heading}|#{convert_number(row[:amount])}" unless last_heading.nil?
-      else                                    # standard data row
-        puts "#{expense_description}|#{convert_number(row[:amount])}"
-      end
-    end
+    extract_expenses(bkdown, [])
   end
 end
 

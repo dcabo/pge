@@ -48,16 +48,32 @@ class ProgrammeBreakdown
     true
   end
   
-  def rows
+  def expenses    
+    expenses = []
+    last_service = ''
+
     # Iterate through HTML table, skipping header
     rows = doc.css('table.S0ESTILO8 tr')[1..-1]               # 2008 onwards (earlier?)
     rows.map do |row|
       columns = row.css('td').map{|td| td.text.strip}
-      { :service => '1',    # FIXME: Social Security only. Parse column[0] instead 
+      expense = {
+        :service => '1',    # FIXME: Social Security only. Parse column[0] instead 
+        :programme => @programme, 
         :expense_concept => columns[1], 
         :description => columns[2],
-        :amount => (columns[3] != '') ? columns[3] : columns[4] }
+        :amount => (columns[3] != '') ? columns[3] : columns[4] 
+      }
+      next if expense[:description].empty?  # Skip empty lines (no description)
+
+      # Fill blanks in row and save result
+      if expense[:service].empty?
+        expense[:service] = last_service
+      else
+        last_service = expense[:service]
+      end
+      expenses << expense      
     end
+    expenses
   end
   
   def self.programme_breakdown? (filename)

@@ -37,19 +37,45 @@ class EntityBreakdown
       [{:id => @entity, :name => name}]
   end
   
-  def rows
+  def expenses
+    # Breakdowns for state entities contain many sub-entities, whose id is contained in the rows.
+    # Breakdowns for non-state entities apply to only one child entity, which we know in advance.
+    last_service = is_state_entity? ? '' : entity
+    last_programme = ''
+    
     # Iterate through HTML table, skipping header
+    expenses = []
     rows = doc.css('table.S0ESTILO9 tr')[1..-1]               # 2008 (and earlier?)
     rows = doc.css('table.S0ESTILO8 tr')[1..-1] if rows.nil?  # 2009 onwards
-    rows.map do |row|
+    rows.each do |row|
       columns = row.css('td').map{|td| td.text.strip}
       columns.insert(0,'') unless is_state_entity? # They lack the first column, 'service'
-      { :service => columns[0], 
+      expense = {
+        :service => columns[0], 
         :programme => columns[1], 
         :expense_concept => columns[2], 
         :description => columns[3],
-        :amount => (columns[4] != '') ? columns[4] : columns[5] }
+        :amount => (columns[4] != '') ? columns[4] : columns[5] 
+      }
+      next if expense[:description].empty?  # Skip empty lines (no description)
+
+      # Fill blanks in row and save result
+      if expense[:service].empty?
+        expense[:service] = last_service
+      else
+        last_service = expense[:service]
+        last_programme = ''
+      end
+      
+      if expense[:programme].empty?
+        expense[:programme] = last_programme
+      else
+        last_programme = expense[:programme] 
+      end
+      
+      expenses << expense      
     end
+    expenses
   end
   
   def self.entity_breakdown? (filename)
