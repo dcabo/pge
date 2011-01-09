@@ -22,16 +22,8 @@ class ProgrammeBreakdown
   end
   
   def section
-    '60'    # FIXME: Hardcoded to Social Security
-  end
-  
-  def name
-    # # TODO: check years before 2008
-    # section_css_class = (year=='2008') ? '.S0ESTILO4' : '.S0ESTILO2'  # FIXME ##########
-    # # Note: the name may include accented characters, so '\w' doesn't work in regex
-    # doc.css(section_css_class).text.strip =~ /^Sección: \d\d (.+)$/
-    # $1
-    'SEGURIDAD SOCIAL'  # FIXME: Hardcoded to Social Security
+    doc.css('.S0ESTILO3').first.text.strip =~ /^Sección: (\d\d) .+$/
+    $1
   end
 
   # Note: as opposed to the case of the EntityBreakdown, we can't know from the 
@@ -41,11 +33,13 @@ class ProgrammeBreakdown
   #       at the moment, so it's not an issue. If needed, there should exist an Entity table
   #       with this type of info, instead of having one single data table (TODO).
   #
-  def entity_type   # TODO: Make this a row attribute
+  def entity_type
     '1'
   end
-  def is_state_entity?
-    true
+  
+  def programme_name
+    doc.css('.S0ESTILO3').last.text.strip =~ /^Programa: \d\d\d\w (.+)$/
+    $1
   end
   
   def expenses    
@@ -57,7 +51,7 @@ class ProgrammeBreakdown
     rows.map do |row|
       columns = row.css('td').map{|td| td.text.strip}
       expense = {
-        :service => '1',    # FIXME: Social Security only. Parse column[0] instead 
+        :service => columns[0].slice(3..4), # section.service comes in the form xx.xx
         :programme => @programme, 
         :expense_concept => columns[1], 
         :description => columns[2],
@@ -66,7 +60,7 @@ class ProgrammeBreakdown
       next if expense[:description].empty?  # Skip empty lines (no description)
 
       # Fill blanks in row and save result
-      if expense[:service].empty?
+      if expense[:service].nil?
         expense[:service] = last_service
       else
         last_service = expense[:service]
