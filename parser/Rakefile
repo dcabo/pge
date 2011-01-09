@@ -1,0 +1,11 @@
+namespace 'parse' do
+
+  # TODO: Convert extract* scripts into rake tasks
+
+  # TODO: Redirect automatically to parser/output...
+  desc "Extract expense data from budget files"
+  task :expenses, [:year] do |t, args|
+    # TODO
+  end
+
+end
