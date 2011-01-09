@@ -16,6 +16,7 @@ class StateBudgetApp < Sinatra::Base
     haml :index
   end
   
+  # FIXME: Social Security missing here, since the parsing doesn't generate a section-level heading
   # FIXME: The consolidation relies on the section/entities/programme ids remaining constant across the years!!
   get '/by_section' do
     @sections, @years = Expense.section_headings.consolidate_by_year_on &:description
