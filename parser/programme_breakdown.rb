@@ -64,6 +64,15 @@ class ProgrammeBreakdown
         expense[:service] = last_service
       else
         last_service = expense[:service]
+        
+        # Bit of a hack (again). We want the subtotals from this breakdown to look like
+        # the ones extracted from an EntityBreakdown, but here the data is presented
+        # as programme>entity>expense, while there they look like entity>programme>expense.
+        # So we need to change the subtotal description to include the programme name.
+        # TODO: Using the subtotals provided in the input files was convenient at the 
+        #       beginning, but it's getting complicated. Should get rid of them. Maybe
+        #       keep the programme-level ones, but only those.
+        expense[:description] = programme_name
       end
       expenses << expense      
     end
