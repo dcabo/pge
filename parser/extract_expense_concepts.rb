@@ -9,13 +9,13 @@
 # This is a first attempt at investigating this issue.
 
 require 'budget'
-require 'economic_breakdown'
+require 'entity_breakdown'
 
 concepts = []
 
 puts 'Concept id, description'
-Budget.new(ARGV[0]).economic_breakdowns.each do |bkdown|
-  bkdown.rows.each do |row|
+Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
+  bkdown.expenses.each do |row|
     unless ( row[:expense_concept].empty? )
       concepts << "#{row[:expense_concept]}, #{row[:description]}"
     end
