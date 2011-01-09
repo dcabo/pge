@@ -90,11 +90,11 @@ class StateBudgetApp < Sinatra::Base
   
   # Note that a program can be split across many entities so, for a particular programme, the total budget
   # is the result of adding up the budgets of all the entities assigned to it.
+  # We consolidate on programme ID (123X), ignoring the slight modifications on descriptions
+  # that happen across the years. Originally I cautiously used the full description to match,
+  # but now it seems more reasonable to rely on ID alone.
+  # TODO: With proper data model, we could have all names across years available on views
   get '/by_programme' do
-    # We consolidate on programme ID (123X), ignoring the slight modifications on descriptions
-    # that happen across the years. Originally I cautiously used the full description to match,
-    # but now it seems more reasonable to rely on ID alone.
-    # TODO: With proper data model, we could have all names across years available on views
     @programmes, @years = Expense.programme_headings.consolidate_by_year_on &:programme
     
     # Note that we don't count internal transfers on the totals!

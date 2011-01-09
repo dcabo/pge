@@ -4,7 +4,7 @@ Parte general del nombre
 más parte específica, como:
    102[O Autonomos]_2_2[Gastos]_2[Detalle]_115[Seccion MEH]_1_2[Detalle]_1105[INE]_1
 
-N_10_E_A_3_  	Memorias: variación respecto a ejercicio anterior
+N_10_E_A_3_    Memorias: variación respecto a ejercicio anterior
                Presupuesto consolidado (debería ser A.4)
 N_10_E_G_5_    Consorcios con participación no mayoritaria del Sector Público
 N_10_E_R_2_    Ingresos
@@ -14,13 +14,24 @@ N_10_E_R_31_   Gastos. Presupuestos por programas (R.3)
             .            . 1_   Por programa
             .            . . 1[Programa]_
             .            . . .           2  Presupuesto gastos (Detalle)
-            .            . . .           3  Presupuesto gastos (Resumén orgánico/económico)
+            .            . . .           3  Presupuesto gastos (Resumen orgánico/económico)
             .            . . T_
             .            . .   1  Transferencias internas (Detalle)
-            .            . .   2  Transferencias internas (Resumén orgánico/económico)
+            .            . .   2  Transferencias internas (Resumen orgánico/económico)
             .            . 2 Presupuesto agregado organismo
             .            2 Anexo inversiones/personal (por programa)
-            2   Seguridad Social           
+            2_1_  Seguridad Social
+                G_1_  Gastos
+                .   1_
+                .   . 1[Programa]_
+                .   . .           O   Presupuesto gastos (Resumen orgánico/económico)
+                .   . .           P   Presupuesto gastos (Detalle)
+                .   . T_
+                .   . . 1  Transferencias internas (Detalle)
+                .   . . 2  Transferencias internas (Resumen orgánico/económico)
+                .   2   Resumen orgánico por programas y capítulos
+                .   7   Resumen económico por programas
+                I_  Ingresos
 N_10_E_R_4_    Estados financieros y cuentas de Organismos Autónomos (debería ser R.5/6/7?)
 N_10_E_R_5_    Estados financieros y cuentas de Organismos Autónomos (debería ser R.6/7?)
 N_10_E_R_6_    Resúmenes Ingresos y Gastos (debería ser R.8)
@@ -63,5 +74,11 @@ class Budget
     Dir[@path+'/doc/HTM/*.HTM'].
         select {|f| EntityBreakdown.entity_breakdown? f }.
         map {|f| EntityBreakdown.new(f) }
+  end
+
+  def programme_breakdowns
+    Dir[@path+'/doc/HTM/*.HTM'].
+        select {|f| ProgrammeBreakdown.programme_breakdown? f }.
+        map {|f| ProgrammeBreakdown.new(f) }
   end
 end
