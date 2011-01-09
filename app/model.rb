@@ -78,6 +78,7 @@ class DataMapper::Collection
         aggregate[:entity_id] = i.entity_id
         aggregate[:programme] = i.programme
         aggregate[:concept] = i.concept
+        aggregate[:description] = i.description
         aggregate[:is_internal_transfer] = i.internal_transfer? # TODO: Smells! Create MultiYearExpense class?
       end
       aggregate[:expenses][i.year] = i.amount.to_i + (aggregate[:expenses][i.year]||0)

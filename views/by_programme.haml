@@ -12,7 +12,7 @@
 		-@programmes.each do |heading, p|
 			%tr{:class => p[:is_internal_transfer] ? "internalTransfer" : ""}
 				%td
-					%a{:href=>"/programme/#{p[:programme]}"} #{p[:programme]} #{heading}
+					%a{:href=>"/programme/#{p[:programme]}"} #{heading} #{p[:description]} 
 				-@years.each do |year|
 					%td.right #{p[:expenses][year]}
 				%td.right #{p[:delta]}
