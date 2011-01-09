@@ -58,3 +58,15 @@ Para importar los datos del fichero CSV generado en la base de datos de la aplic
     sqlite3> .import parser/output/expenses.csv expenses
     sqlite3> .exit
 
+Rake
+----
+
+Existen tareas Rake para ejecutar las tareas anteriores:
+
+    $ rake -T
+    rake parse:budget[year]              # Extract all information from budget files
+    rake parse:child_sections[year]      # Extract children section names from budget files
+    rake parse:expenses[year]            # Extract expenses from budget files
+    rake parse:top_level_sections[year]  # Extract top level section names from budget files
+
+Los datos extraídos se redirigen a ficheros en la carpeta `output/[año]/`.

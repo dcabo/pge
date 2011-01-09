@@ -2,10 +2,26 @@ namespace 'parse' do
 
   # TODO: Convert extract* scripts into rake tasks
 
-  # TODO: Redirect automatically to parser/output...
-  desc "Extract expense data from budget files"
-  task :expenses, [:year] do |t, args|
-    # TODO
+  desc "Extract top level section names from budget files"
+  task :top_level_sections, [:year] do |t, args|
+    puts "Parsing top level sections for year #{args.year}..."
+    puts `"#{File.dirname(__FILE__)}/extract_top_level_sections.rb" "#{args.year}" > "output/#{args.year}/top_level_sections.csv"`
+  end
+  
+  desc "Extract children section names from budget files"
+  task :child_sections, [:year] do |t, args|
+    puts "Parsing child sections for year #{args.year}..."
+    puts `"#{File.dirname(__FILE__)}/extract_child_sections.rb" "#{args.year}" > "output/#{args.year}/child_sections.csv"`
   end
 
+  desc "Extract expenses from budget files"
+  task :expenses, [:year] do |t, args|
+    puts "Parsing expenses for year #{args.year}..."
+    puts `"#{File.dirname(__FILE__)}/extract_expenses.rb" "#{args.year}" > "output/#{args.year}/expenses.csv"`
+  end
+  
+  desc "Extract all information from budget files"
+  task :budget, [:year] => [:top_level_sections, :child_sections, :expenses] do |t, args|
+    puts "Parsed budget for year #{args.year}."
+  end
 end
