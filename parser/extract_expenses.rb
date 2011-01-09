@@ -52,7 +52,7 @@ Budget.new(ARGV[0]).entity_breakdowns.each do |bkdown|
       open_headings << expense_description
     elsif ( row[:expense_concept].empty? )  # closing heading
       last_heading = open_headings.pop()
-      puts "#{last_heading}|#{convert_number(row[:amount])}" unless last_heading.empty?
+      puts "#{last_heading}|#{convert_number(row[:amount])}" unless last_heading.nil?
     else                                    # standard data row
       puts "#{expense_description}|#{convert_number(row[:amount])}"
     end
