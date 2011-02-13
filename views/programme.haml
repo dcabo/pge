@@ -44,9 +44,11 @@
 %p	Todas las cantidades en miles de euros.
 
 %p 
+	-# NOTE: fnSetColumnVis from DataTables can't handle my 'complex' header/footer.
+	-# So until we have a better solution (re-rendering the table) this will have to do.
 	Mostrar/ocultar año: 
 	-@years.each do |year|
-		%a{:href=>"#", :onclick=>"toggleYear(#{year}); return false"} #{year}
+		%a{:href=>"javascript:void(0)", :onclick=>"toggleYear(#{year});"} #{year}
 
 %p
-	%a{:href=>"#", :onclick=>"hideChildRows(); return false"} Ocultar subconceptos
+	%a{:href=>"javascript:void(0)", :onclick=>"hideChildRows();"} Ocultar subconceptos
