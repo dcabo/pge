@@ -49,6 +49,8 @@ namespace 'expenses' do
   task :export_programmes, [:year] do |t, args|
     args.with_defaults(:year => 'year')
     run_sqlite3_commands([
+      '.mode csv',
+      '.separator "|"',
       "select programme, description, sum(amount) from expenses \
        where year=#{args.year} and programme<>'' and concept='' and programme<>'000X' \
        group by programme;",      
