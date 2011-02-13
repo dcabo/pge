@@ -24,7 +24,10 @@
 
 		:javascript
 			function hideChildRows() {
-				$('.child_row').hide();
+				$('.row_level_2').hide();
+				$('.row_level_3').hide();
+				$('.row_level_4').hide();
+				$('.row_level_5').hide();
 			};
 			
 			$(document).ready(function() {
@@ -42,7 +45,7 @@
 			};
 
 			function toggleCategory(category) {
-				$('.cat'+category).toggle();
+				$('.parent'+category).toggle();
 			};
 
 	%body#dt_example

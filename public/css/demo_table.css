@@ -220,6 +220,10 @@ table.display tr.even.internalTransfer {
 	background-color: #eee;
 }
 
+/* Disable odd/even on expense page (confusing right now) */
+table.display tr.odd.expense, table.display tr.even.expense {
+	background-color: #eeeeff;
+}
 
 tr.odd {
 	background-color: #E2E4FF;
@@ -461,6 +465,21 @@ tr.even.internalTransfer td.sorting_3 {
 	background-color: #e2e2e2;
 }
 
+/* Disable odd/even on expense page (confusing right now) */
+tr.odd.expense td.sorting_1, tr.even.expense td.sorting_1 {
+	background-color: #e4e4ff;
+}
+
+tr.odd.expense td.sorting_2, tr.even.expense td.sorting_2 {
+	background-color: #d1d1ff;
+}
+
+tr.odd.expense td.sorting_3, tr.even.expense td.sorting_3 {
+	background-color: #d1d1ff;
+}
+
+
+
 
 /*
  * Row highlighting example
@@ -531,6 +550,11 @@ table.display tr.gradeX {
 
 table.display tr.internalTransfer {
 	background-color: #eee;
+}
+
+/* Disable odd/even on expense page (confusing right now) */
+table.display tr.expense {
+	background-color: #ddddff;
 }
 
 div.box {

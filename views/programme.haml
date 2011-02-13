@@ -7,6 +7,12 @@
 -else
 	%h2 #{@programme_name}
 
+:css
+	tr.row_level_1 .heading { font-weight: bold;}
+	tr.row_level_2 .heading { padding-left: 20px;}
+	tr.row_level_3 .heading { padding-left: 30px;}
+	tr.row_level_5 .heading { padding-left: 40px;}
+	
 %table#pge.display
 	%thead
 		%tr
@@ -17,10 +23,13 @@
 
 	%tbody
 		-@expenses.each do |heading, e|
-			%tr{:class => ("child_row cat#{e[:parent_concept]}" unless e[:parent_concept].nil?)}
-				%td 
+			%tr{:class => e[:parent_concept].nil? ? |
+									"expense row_level_1" :		 |
+									"expense parent#{e[:parent_concept]} row_level_#{e[:concept].length}" } |
+				%td{:class=>"heading"}
 					#{heading} 
-					%a{:href=>"#", :onclick=>"toggleCategory(#{e[:concept]}); return false"} +
+					-if e[:concept].length < 5
+						%a{:href=>"#", :onclick=>"toggleCategory(#{e[:concept]}); return false"} +
 				-@years.each do |year|
 					%td.right{:class => "year#{year}"} #{e[:expenses][year]}
 				%td.right #{e[:delta]}
