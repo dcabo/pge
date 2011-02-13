@@ -64,6 +64,7 @@ end
 # We add a convenience method to the DataMapper Collection class in order to 
 # consolidate the results as we want them. It takes a block method to use as the 
 # key to group by. The expenses for two items with the same key are added together.
+# The returned list of years is sorted.
 class DataMapper::Collection 
   
   # TODO: A bit of a hack, really, putting it inside the DataMapper class. worth it?
@@ -85,7 +86,7 @@ class DataMapper::Collection
       aggregates[key] = aggregate
       years.add(i.year)
     }
-    return aggregates, years.to_a
+    return aggregates, years.to_a.sort
   end
 end
 

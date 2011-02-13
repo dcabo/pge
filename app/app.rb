@@ -134,15 +134,15 @@ class StateBudgetApp < Sinatra::Base
       s[:expenses].each_key {|year| sum[year] = (sum[year]||0) + (s[:expenses][year]||0) }
       sum
     end
-    totals[:delta] = calculate_delta(totals[years.first], totals[years.last])
+    totals[:delta] = calculate_delta(totals[years[-2]], totals[years.last])
     totals
   end
     
-  # Given a list of items, add beginning-to-end deltas
-  # TODO: Better on a yearly basis?
+  # Given a list of items, add previous-to-last-year deltas
+  # TODO: Better on a yearly basis? Feels like a hack now
   def add_deltas(items, years)
     items.each do |s|
-      s[:delta] = calculate_delta(s[:expenses][years.first], s[:expenses][years.last])
+      s[:delta] = calculate_delta(s[:expenses][years[-2]], s[:expenses][years.last])
     end
   end
 end
