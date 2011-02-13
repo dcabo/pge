@@ -17,8 +17,10 @@
 
 	%tbody
 		-@expenses.each do |heading, e|
-			%tr
-				%td #{heading}
+			%tr{:class => ("child_row cat#{e[:parent_concept]}" unless e[:parent_concept].nil?)}
+				%td 
+					#{heading} 
+					%a{:href=>"#", :onclick=>"toggleCategory(#{e[:concept]}); return false"} +
 				-@years.each do |year|
 					%td.right{:class => "year#{year}"} #{e[:expenses][year]}
 				%td.right #{e[:delta]}
@@ -36,3 +38,6 @@
 	Mostrar/ocultar año: 
 	-@years.each do |year|
 		%a{:href=>"#", :onclick=>"toggleYear(#{year}); return false"} #{year}
+
+%p
+	%a{:href=>"#", :onclick=>"hideChildRows(); return false"} Ocultar subconceptos

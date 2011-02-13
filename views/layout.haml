@@ -23,6 +23,10 @@
 
 
 		:javascript
+			function hideChildRows() {
+				$('.child_row').hide();
+			};
+			
 			$(document).ready(function() {
 				$('#pge').dataTable({
 					'bInfo': false,
@@ -30,10 +34,15 @@
 					'bAutoWidth': false,
 					'bFilter': false
 				});
+				hideChildRows();
 			} );
 
 			function toggleYear(year) {
 				$('.year'+year).toggle();
+			};
+
+			function toggleCategory(category) {
+				$('.cat'+category).toggle();
 			};
 
 	%body#dt_example

@@ -21,6 +21,19 @@ class Expense
     programme == '000X'
   end
   
+  # Given an expense concept, return the parent concept it belongs to; or nil if none.
+  # This is calculated using purely string manipulation (removing one or two characters
+  # from the end of the concept), relying on knowledge from the budget structure.
+  # Example "120" (Retribuciones básicas) returns "12" (Funcionarios).
+  def parent_concept
+    case concept.length
+    when 2,3
+      concept[0..concept.length-2]
+    when 5
+      concept[0..2] 
+    end
+  end
+  
   # Convenience scope methods
   def self.section(section)
     all(:section => section)
@@ -79,6 +92,7 @@ class DataMapper::Collection
         aggregate[:entity_id] = i.entity_id
         aggregate[:programme] = i.programme
         aggregate[:concept] = i.concept
+        aggregate[:parent_concept] = i.parent_concept
         aggregate[:description] = i.description
         aggregate[:is_internal_transfer] = i.internal_transfer? # TODO: Smells! Create MultiYearExpense class?
       end
