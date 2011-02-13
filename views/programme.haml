@@ -12,7 +12,7 @@
 		%tr
 			%th Descripción
 			-@years.each do |year|
-				%th #{year}
+				%th{:class => "year#{year}"} #{year}
 			%th %
 
 	%tbody
@@ -20,14 +20,19 @@
 			%tr
 				%td #{heading}
 				-@years.each do |year|
-					%td.right #{e[:expenses][year]}
+					%td.right{:class => "year#{year}"} #{e[:expenses][year]}
 				%td.right #{e[:delta]}
 				
 	%tfooter
 		%tr
 			%td Total
 			-@years.each do |year|
-				%td.right #{@totals[year]}
+				%td.right{:class => "year#{year}"} #{@totals[year]}
 			%td.right #{@totals[:delta]}
 
-Todas las cantidades en miles de euros.
+%p	Todas las cantidades en miles de euros.
+
+%p 
+	Mostrar/ocultar año: 
+	-@years.each do |year|
+		%a{:href=>"#", :onclick=>"toggleYear(#{year}); return false"} #{year}
