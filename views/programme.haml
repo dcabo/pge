@@ -6,9 +6,14 @@
 	%h4 #{@programme_name}
 -else
 	%h2 #{@programme_name}
+	%h4 Entidades responsables:
+	%ul
+		-@programme_breakdown.each do |pb|
+			%li 
+				%a{:href=>"/section/#{pb[:section]}/entity/#{pb[:entity]}/programme/#{pb[:programme]}"} #{pb[:description]}
 
 :css
-	tr.row_level_1 .heading { font-weight: bold;}
+	tr.row_level_1 { font-weight: bold;}
 	tr.row_level_2 .heading { padding-left: 20px;}
 	tr.row_level_3 .heading { padding-left: 30px;}
 	tr.row_level_5 .heading { padding-left: 40px;}
@@ -35,7 +40,7 @@
 				%td.right #{e[:delta]}
 				
 	%tfooter
-		%tr
+		%tr{:class => "row_level_1"}
 			%td Total
 			-@years.each do |year|
 				%td.right{:class => "year#{year}"} #{@totals[year]}

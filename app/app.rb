@@ -106,7 +106,26 @@ class StateBudgetApp < Sinatra::Base
   
   # TODO: Do we want to show also the expenses split per entity?
   get '/programme/:programme' do
-    @programme_name = Expense.programme_headings.programme(params[:programme]).first.description
+    # Pick all headings for given programme, which can be managed by a number of entities
+    programme_headings = Expense.programme_headings.programme(params[:programme])
+    
+    # Retrieve the managing entities information. The assignment can happen across all years
+    # or just one, and the entity name may actually change, so we retrieve the details for all 
+    # assignments and all years...
+    @programme_breakdown = []
+    programme_headings.each do |p| 
+      @programme_breakdown << {
+        :section => p.section,
+        :entity => p.entity_id,
+        :programme => p.programme,
+        # TODO: Ugly to do so many queries, but given current (poor) data model...
+        :description => Expense.entity(p.section, p.entity_id).entity_headings.first(:year => p.year).description
+      }
+    end
+    @programme_breakdown.uniq!   # ...and then de-duplicate 
+    
+    # The programme description should be the same across all managing entities, so just pick one
+    @programme_name = programme_headings.first.description
     
     all_expenses = Expense.programme(params[:programme]).expenses
     # Note that for the same 'economic concept code' we may have more than one description *sigh* 
