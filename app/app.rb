@@ -49,13 +49,13 @@ class StateBudgetApp < Sinatra::Base
 
     all_entities = Expense.section(params[:section]).entity_headings
     @entities, @years = all_entities.consolidate_by_year_on &:description
-    
+
     #  See comment above on recalculating subtotals to avoid double accounting.
     # TODO: A better data model would help here, instead of working off the original data all the time.
     programmes = Expense.section(params[:section]).programme_headings.not_internal_transfer
     bottom_up_totals, = programmes.consolidate_by_year_on &:entity_id
     @entities.each_value do |e|
-      e[:expenses].each_key {|year| e[:expenses][year] = bottom_up_totals[e[:entity_id]][:expenses][year] }
+      e[:expenses].each_key {|year| e[:expenses][year] = bottom_up_totals[e[:entity_id]][:expenses][year] if bottom_up_totals[e[:entity_id]]}
     end
         
     @totals = calculate_total_expenses(@entities.values, @years)
