@@ -6,7 +6,10 @@
 		%link{"rel" => "stylesheet", "href" => "/css/demo_page.css", "type" => "text/css"}
 		%link{"rel" => "stylesheet", "href" => "/css/demo_table.css", "type" => "text/css"}
 
-		%script{ :type => "text/javascript", :src => "/js/jquery.js" }
+		-if ENV["RACK_ENV"] == "production"
+		  %script{ :type => "text/javascript", :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js" }
+		-else
+	    %script{ :type => "text/javascript", :src => "/js/jquery.js" }
 		%script{ :type => "text/javascript", :src => "/js/jquery.dataTables.js" }
 
 		-if ENV["RACK_ENV"] == "production"
