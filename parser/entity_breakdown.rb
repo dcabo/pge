@@ -7,16 +7,19 @@ class EntityBreakdown
   attr_reader :year, :section, :entity, :entity_type
 
   def initialize(filename)
-    filename =~ ENTITY_EXPENSES_BKDOWN
-    @year = '20'+$1
+    # The filename structure changed in 2012, so we need to start by finding out the year
+    @year = EntityBreakdown.get_year(filename)
+    
+    # Once the year is known, we can extract additional details from the filename
+    @filename = filename
+    filename =~ EntityBreakdown.get_expense_breakdown_filename_regex(@year, is_state_entity?)
     @entity_type = $2                       # Always 1 for state entities, 2-4 for non-state
     @section = $3                           # Parent section
-    @entity = $5 unless is_state_entity?    # Id of the non-state entity
-    @filename = filename
+    @entity = $4 unless is_state_entity?    # Id of the non-state entity
   end
   
   def is_state_entity?
-    return @entity_type == '1'
+    @filename =~ EntityBreakdown.get_expense_breakdown_filename_regex(@year, true)    
   end
   
   def name
@@ -26,7 +29,9 @@ class EntityBreakdown
       section_css_class = (year=='2008') ? '.S0ESTILO4' : '.S0ESTILO2'
       doc.css(section_css_class).text.strip =~ /^Sección: \d\d (.+)$/
     else
-      doc.css('.S0ESTILO3').last.text.strip =~ /^Organismo: \d\d\d (.+)$/
+      year == '2012' ? 
+        doc.css('.S0ESTILO4')[1].text.strip =~ /^Organismo: \d\d\d (.+)$/ :
+        doc.css('.S0ESTILO3').last.text.strip =~ /^Organismo: \d\d\d (.+)$/
     end
     $1
   end
@@ -49,6 +54,7 @@ class EntityBreakdown
     rows = doc.css('table.S0ESTILO8 tr')[1..-1] if rows.nil?  # 2009 onwards
     rows.each do |row|
       columns = row.css('td').map{|td| td.text.strip}
+      columns.shift if year == '2012'
       columns.insert(0,'') unless is_state_entity? # They lack the first column, 'service'
       expense = {
         :service => columns[0], 
@@ -78,14 +84,31 @@ class EntityBreakdown
     expenses
   end
   
+  # TODO: Refactor all this messy filename handling logic! :/
   def self.entity_breakdown? (filename)
-    filename=~ENTITY_EXPENSES_BKDOWN
+    year = EntityBreakdown.get_year(filename)
+    filename =~ get_expense_breakdown_filename_regex(year, true) || filename =~ get_expense_breakdown_filename_regex(year, false)
+  end
+
+  private  
+  
+  def self.get_year(filename)
+    filename =~ /N_(\d\d)_[AE]/
+    return '20'+$1
   end
   
-  private
+  def self.get_expense_breakdown_filename_regex(year, is_state_entity)
+    if year == '2012'
+      is_state_entity ? 
+        /N_(\d\d)_[AE]_V_1_10([1234])_1_1_2_2_[1234](\d\d)_1_2.HTM/ :
+        /N_(\d\d)_[AE]_V_1_10([1234])_2_1_[1234](\d\d)_1_1(\d\d\d)_2_2_1.HTM/;
+    else
+      is_state_entity ? 
+        /N_(\d\d)_[AE]_V_1_10([1234])_2_2_2_1(\d\d)_1_[12]_1.HTM/ :
+        /N_(\d\d)_[AE]_V_1_10([1234])_2_2_2_1(\d\d)_1_[12]_1(\d\d\d)_1.HTM/;
+    end
+  end
   
-  ENTITY_EXPENSES_BKDOWN =  /N_(\d\d)_[AE]_V_1_10([1234])_2_2_2_1(\d\d)_1_[12]_1((\d\d\d)_1)?.HTM/;
-
   def doc
     @doc = Nokogiri::HTML(open(@filename)) if @doc.nil?  # Lazy parsing of doc, only when needed
     @doc
