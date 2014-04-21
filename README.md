@@ -1,6 +1,6 @@
 Repositorio obsoleto
 ====================
 
-El código actualizado es ahora parte del [repositorio de dondevanmisimpuestos.es][1].
+El código actualizado está ahora en [pge-parser][1].
 
-[1]: https://github.com/dcabo/dondevanmisimpuestos.es
+[1]: https://github.com/civio/pge-parser
